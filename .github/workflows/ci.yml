@@ -46,6 +46,7 @@ jobs:
             "templates/github/PULL_REQUEST_TEMPLATE.md"
             "templates/github/workflows/auto-label-issues.yml"
             "install.sh"
+            "docs/guide.md"
             "CONTRIBUTING.md"
             "README.md"
             "LICENSE"
