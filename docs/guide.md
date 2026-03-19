@@ -10,7 +10,7 @@
 
 - [1. Prerequisites / 前置条件](#1-prerequisites--前置条件)
 - [2. Installation / 安装](#2-installation--安装)
-- [3. Post-Install Setup / 安装后配置](#3-post-install-setup--安装后配置)
+- [3. First-Time Setup / 首次配置](#3-first-time-setup--首次配置)
 - [4. Using /loop / 使用 /loop](#4-using-loop--使用-loop)
 - [5. Using /loop-issue / 使用 /loop-issue](#5-using-loop-issue--使用-loop-issue)
 - [6. Using /loop-status / 使用 /loop-status](#6-using-loop-status--使用-loop-status)
@@ -68,58 +68,19 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 You'll see output like: / 你会看到类似输出：
 
 ```
-🔄 Loop Kit Installer
+🔄 Loop Kit Installer (main)
 
-? Version to install (main):
-
-   Workflows (/loop, /loop-issue, /loop-status) — always installed ✓
-
-? Install Issue/PR templates? (Y/n) Y
-? Create AGENTS.md template? (Y/n) Y
-? Create priority labels on GitHub? (Y/n) Y
-
-📦 Installing Loop Kit (main)...
-
-📥 Installing workflows...
-   ✅ .agents/workflows/loop-job.md
-   ✅ .agents/workflows/loop-issue.md
-   ✅ .agents/workflows/loop-status.md
-📥 Installing templates...
-   ✅ .github/ISSUE_TEMPLATE/
-   ✅ .github/PULL_REQUEST_TEMPLATE.md
-   ✅ .github/workflows/auto-label-issues.yml
-   ✅ AGENTS.md (template — edit the {{placeholders}})
-🏷️  Creating GitHub labels...
-   ✅ Labels created
+📥 Workflows...
+   ✅ .agents/workflows/ (loop-job, loop-issue, loop-status, loop-init)
+📥 Templates...
+   ✅ .github/ (issue templates, PR template, auto-label action)
    ✅ .agents/.loop-kit-version (main)
 
 🎉 Loop Kit installed!
 
-Next steps:
-  1. Edit AGENTS.md — fill in your project's build/test commands
-  2. In your AI agent, type /loop to start processing issues
-  3. Type /loop-issue #N to process a specific issue
-  4. Type /loop-status for a quick dashboard
-```
-
-### Option B: Minimum Install (1 file) / 最小安装（1 个文件）
-
-If you only need the core loop workflow: / 如果只需要核心工作流：
-
-```bash
-mkdir -p .agents/workflows
-curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/workflows/loop-job.md \
-  -o .agents/workflows/loop-job.md
-```
-
-### Option C: Workflows Only / 仅安装工作流
-
-Install all three workflows without templates or labels:
-
-安装全部三个工作流，不安装模板和标签：
-
-```bash
-bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
+Next:
+  1. /loop-init  — AI analyzes your project, generates AGENTS.md + labels
+  2. /loop       — start processing issues
 ```
 
 ### Version Pinning / 版本锁定
@@ -127,11 +88,7 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 Pin to a specific release for reproducibility: / 锁定到指定版本以确保可复现：
 
 ```bash
-# Using --version flag / 使用 --version 参数
-bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version v1.0.0
-
-# Or using environment variable / 或使用环境变量
-LOOP_KIT_VERSION=v1.0.0 bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
+bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version v2.0.0
 ```
 
 ### Installer Options / 安装器选项
@@ -548,22 +505,32 @@ After each `/loop` run, a summary is appended to `.agents/loop-history.md`:
 ```markdown
 # Loop History
 
-## 2026-03-19 14:30
+## 2026-03-19 14:30 — Session Summary
 
-**PRs checked**: #15 CI ✅ ready for review
-**Issues worked**:
-  - #12 (P1-high) — fixed login timeout → PR #22
-  - #25 (P2-medium) — added input validation → PR #23
-**Skipped**: #3 (already has PR), #7 (depends on #3)
-**Notes**: All tests pass. Clean build.
+### 📋 Your Review Queue
 
-## 2026-03-19 10:00
+#### Group: auth (3 PRs, P0)
+Issues: #1, #3, #7
+PRs: #22, #23, #24
+Merge order: #22 → #23 → #24
+After merge, test: login flow, token refresh, session expiry
 
-**PRs checked**: (none open)
-**Issues worked**:
-  - #3 (P0-critical) — fixed database connection crash → PR #15
-**Skipped**: #14 (needs human decision)
-**Notes**: macOS validation pending — no Linux test env available.
+#### Standalone
+PR: #25 — added input validation (P2)
+
+### ⏭️ Skipped
+- #14 (needs human decision)
+
+### 📊 Stats
+PRs created: 4 | Issues processed: 4 | Skipped: 1
+
+## 2026-03-19 10:00 — Session Summary
+
+### 📋 Your Review Queue
+PR: #15 — fixed database connection crash (P0)
+
+### ⏭️ Skipped
+- #14 (needs human decision)
 ```
 
 ### Why It Matters / 为什么重要
