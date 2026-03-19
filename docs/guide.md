@@ -238,9 +238,9 @@ In your AI coding agent, simply type:
 /loop
 ```
 
-The agent will execute the full 5-step workflow automatically.
+The agent will execute the full 5-step workflow automatically, processing **all actionable issues** in one session.
 
-智能体会自动执行完整的五步工作流。
+智能体会自动执行完整的五步工作流，在一次会话中处理**所有可操作的 Issue**。
 
 ### What Happens in Each Step / 每步做了什么
 
@@ -338,7 +338,9 @@ Agent: "Running verification..."
 Agent: "Pushing branch and creating PR..."
   → git push -u origin issue-12-fix-login-timeout
   → gh pr create --title "Fix login timeout handling" --body "Closes #12 ..."
-Agent: "PR #22 created. Summary: Fixed timeout logic in auth module."
+Agent: "PR #22 created. Checking for more issues..."
+  → git checkout main && git pull
+  → More actionable issues found → looping back to Step 2
 ```
 
 The PR body includes: / PR 正文包含：
@@ -347,18 +349,23 @@ The PR body includes: / PR 正文包含：
 - What was tested / 测试了什么
 - Caveats if any / 注意事项（如有）
 
+**After submitting the PR, the agent checks for more actionable issues.** If found, it returns to Step 2. Otherwise it proceeds to Step 5.
+
+**提交 PR 后，智能体检查是否还有可处理的 Issue。** 如果有，返回 Step 2；否则进入 Step 5。
+
 #### Step 5: Record History / 记录历史
 
-The agent appends to `.agents/loop-history.md`:
+After all issues are processed, the agent appends to `.agents/loop-history.md`:
 
-智能体追加到 `.agents/loop-history.md`：
+所有 Issue 处理完毕后，智能体追加到 `.agents/loop-history.md`：
 
 ```markdown
 ## 2026-03-19 14:30
 
 **PRs processed**: #15 merged, #18 CI fixed and merged
-**Issue worked**: #12 (P1-high) — fixed login timeout handling
-**PR created**: #22
+**Issues worked**:
+  - #12 (P1-high) — fixed login timeout → PR #22
+  - #25 (P2-medium) — added input validation → PR #23
 **Skipped**: #3 (already has PR), #7 (depends on #3)
 **Notes**: All tests pass. Clean build.
 ```

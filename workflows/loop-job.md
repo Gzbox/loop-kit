@@ -1,10 +1,10 @@
 ---
-description: Structured issue processing loop — review PRs, pick next issue, classify, implement, submit PR
+description: Structured issue processing loop — review PRs, process all actionable issues, submit PRs
 ---
 
 # Loop Job Workflow
 
-Structured issue processing loop for any GitHub project. Execute one iteration per invocation.
+Structured issue processing loop for any GitHub project. Processes **all actionable issues** per invocation — one PR per issue.
 
 > Adapt this workflow to your project. Not every project uses TDD or has the same tooling — follow what your `AGENTS.md` defines.
 
@@ -211,22 +211,29 @@ Issue selected
    If `gh pr create` fails (e.g., template parsing error, permissions), try with `--fill` flag as fallback.
    If it still fails, report the error to the user and stop.
 
-5. **Report to user**: summarize what was done, what issue was addressed, and any follow-up needed.
+5. **Report**: summarize what was done for this issue.
+
+6. **Loop check** — are there more actionable issues?
+   - **YES** → Return to Step 2 (`git checkout main && git pull`, pick next issue)
+   - **NO** → Proceed to Step 5 (Record History)
+   - **Blocked** (remaining issues all need human decision, have open PRs, or are platform-mismatched) → Proceed to Step 5
 
 ---
 
-## Step 5: Record Iteration History
+## Step 5: Record Session History
 
-After completing (or skipping/stopping), append a summary to `.agents/loop-history.md`:
+After processing all issues (or stopping), append a summary to `.agents/loop-history.md`:
 
 ```markdown
 ## YYYY-MM-DD HH:MM
 
 **PRs processed**: #5 merged, #8 had CI failure (fixed and merged)
-**Issue worked**: #7 (P1-high) — implemented trigger index
-**PR created**: #12
+**Issues worked**:
+  - #7 (P1-high) — implemented trigger index → PR #12
+  - #11 (P2-medium) — fixed typo in docs → PR #13
+  - #14 (P2-medium) — added input validation → PR #14
 **Skipped**: #9 (depends on #7, still open), #18 (needs human decision)
-**Notes**: macOS validation pending
+**Notes**: macOS validation pending for #7
 ```
 
 This gives the next `/loop` invocation context about what happened previously.
@@ -239,7 +246,7 @@ If the file doesn't exist yet, create it with a header: `# Loop History`
 - Follow `AGENTS.md` constraints strictly — it is the project's constitution
 - Run full verification suite before committing (or document why you couldn't)
 - Update relevant docs if architecture, workflow, or validation expectations change
-- **One issue per iteration** — keep PRs small and focused
+- **One PR per issue** — keep PRs small and focused, but process multiple issues per session
 - Do not invent priority order — follow labels and `AGENTS.md`
 - Do not claim validation that did not actually happen
 - When issue body conflicts with labels, trust the issue body
