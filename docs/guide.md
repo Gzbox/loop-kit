@@ -119,7 +119,7 @@ Install all three workflows without templates or labels:
 安装全部三个工作流，不安装模板和标签：
 
 ```bash
-bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --workflows-only
+bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
 ```
 
 ### Version Pinning / 版本锁定
@@ -218,9 +218,9 @@ In your AI coding agent, simply type:
 /loop
 ```
 
-The agent will execute the full 5-step workflow automatically, processing **all actionable issues** in one session.
+The agent will execute the full workflow automatically, processing **all actionable issues** grouped by component.
 
-智能体会自动执行完整的五步工作流，在一次会话中处理**所有可操作的 Issue**。
+智能体会自动执行完整工作流，按组件分组处理**所有可操作的 Issue**。
 
 ### What Happens in Each Step / 每步做了什么
 
@@ -235,36 +235,38 @@ If either fails, the agent stops and reports to you.
 
 如果任一检查失败，智能体会停止并报告。
 
-#### Step 1: Check Open PRs / 检查已有 PR
+#### Step 1: Check PRs + Verify Main / 检查 PR + 验证主干
 
 ```
+Agent: "Pulling latest main and running tests..."
+  → npm test ✅ (all passing)
 Agent: "Found 2 open PRs. Let me check them..."
-  → #15: Checks pass ✅, no conflicts → ready for review
+  → #15: CI ✅, has review comment → fixing per feedback, pushing
   → #18: CI failing → fixing test, pushing fix
-Agent: "PR status reported. Moving to issue selection."
+  → #20: No review yet → skipping (awaiting review)
+Agent: "PR status reported. Moving to issue scanning."
 ```
 
 The agent: / 智能体会：
-- Checks CI status on each PR / 检查每个 PR 的 CI 状态
-- Fixes failures if possible / 尽可能修复失败
-- Resolves merge conflicts via rebase / 通过 rebase 解决合并冲突
+- **Verifies main health** — runs tests, fixes if broken / 验证主干健康
+- **Addresses review feedback** — reads comments, fixes code, pushes / 处理 review 反馈
+- Fixes CI failures / 修复 CI 失败
 - **Reports status, does NOT merge** / **报告状态，不合并（人来合并）**
 
-#### Step 2: Select Next Issue / 选取下一个 Issue
+#### Step 2: Scan & Auto-Group / 扫描并自动分组
 
 ```
-Agent: "Scanning issues..."
-  → #3 (P0-critical) — has open PR #15 already → skip
-  → #7 (P1-high) — depends on #3 (still open) → skip
-  → #12 (P1-high) — no blockers, clear scope → selected!
-Agent: "Working on #12: Fix login timeout handling"
+Agent: "Scanning 8 open issues..."
+  → #1, #3, #7 all relate to auth module → Group: auth
+  → #2, #5 both about dashboard → Group: dashboard
+  → #10 standalone → Standalone
+Agent: "3 groups identified. Starting with Group: auth (P0)"
 ```
 
-Selection priority: / 选取优先级：
-1. `P0-critical` > `P1-high` > `P2-medium` > `P3-low`
-2. Skip issues with existing PRs / 跳过已有 PR 的 Issue
-3. Skip issues with unmet dependencies / 跳过有未满足依赖的 Issue
-4. Within same priority, prefer smaller concrete issues / 同优先级下，优先选择小型具体 Issue
+Grouping rules: / 分组规则：
+1. Uses `component:xxx` labels if present / 如有 `component:xxx` 标签则直接用
+2. Otherwise AI infers from titles/bodies / 否则 AI 从标题/内容推断
+3. Max 5 per group, ≤2 issues skips grouping / 每组最多 5 个，≤2 个跳过分组
 
 #### Step 3: Classify & Implement / 分类并实现
 
@@ -313,46 +315,52 @@ Next `/loop` invocation, the plan's first sub-task will be implemented (Round 2+
 ```
 Agent: "Running verification..."
   → npm run build ✅
-  → npm test ✅ (14 passing, 0 failing)
-  → npm run lint ✅
-Agent: "Pushing branch and creating PR..."
-  → git push -u origin issue-12-fix-login-timeout
-  → gh pr create --title "Fix login timeout handling" --body "Closes #12 ..."
-Agent: "PR #22 created. Checking for more issues..."
-  → git checkout main && git pull
-  → More actionable issues found → looping back to Step 2
+  → npm test ✅ (14 passing)
+Agent: "Creating review-friendly PR..."
+  → PR #22 created with:
+    • Group: auth (1/3 — see also PR #23, #24)
+    • Key Review Points: login.ts:45-52
+    • Merge after: — (first in group)
+Agent: "Checking for more issues in group auth..."
+  → #3 remaining → looping back to Step 3
 ```
 
-The PR body includes: / PR 正文包含：
-- `Closes #12` (auto-closes the issue when merged) / 合并时自动关闭 Issue
-- Summary of changes / 变更摘要
-- What was tested / 测试了什么
-- Caveats if any / 注意事项（如有）
+Each PR includes: / 每个 PR 包含：
+- **Group info** — `Group: auth (1/3)` / 分组信息
+- **Key Review Points** — which lines to focus on / 重点看哪几行
+- **Merge order** — `Merge after: PR #X` / 合并顺序
+- **Testing guidance** — what to test after merging the group / 合并后测什么
 
-**After submitting the PR, the agent checks for more actionable issues.** If found, it returns to Step 2. Otherwise it proceeds to Step 5.
+#### Step 5: Review Checklist / Review 清单
 
-**提交 PR 后，智能体检查是否还有可处理的 Issue。** 如果有，返回 Step 2；否则进入 Step 5。
+After all issues are processed, the agent outputs a **human review checklist**:
 
-#### Step 5: Record History / 记录历史
-
-After all issues are processed, the agent appends to `.agents/loop-history.md`:
-
-所有 Issue 处理完毕后，智能体追加到 `.agents/loop-history.md`：
+所有 Issue 处理完毕后，智能体输出**人的 review 清单**：
 
 ```markdown
-## 2026-03-19 14:30
+## 2026-03-19 14:30 — Session Summary
 
-**PRs checked**: #15 CI ✅ ready for review, #18 CI fixed
-**Issues worked**:
-  - #12 (P1-high) — fixed login timeout → PR #22
-  - #25 (P2-medium) — added input validation → PR #23
-**Skipped**: #3 (already has PR), #7 (depends on #3)
-**Notes**: All tests pass. Clean build.
+### 📋 Your Review Queue
+
+#### Group: auth (3 PRs, P0)
+Issues: #1, #3, #7
+PRs: #22, #23, #24
+Merge order: #22 → #23 → #24
+After merge, test: login flow, token refresh, session expiry
+
+#### Group: dashboard (2 PRs, P1)
+Issues: #2, #5
+PRs: #25, #26
+Merge order: any
+After merge, test: chart rendering, filter functionality
+
+### ⏭️ Skipped
+- #9 (depends on #7)
 ```
 
-This gives the next `/loop` context about what happened.
+This gives you a clear, grouped to-do list for review.
 
-这为下一次 `/loop` 提供了关于上一轮的上下文。
+这给你一个清晰的、分组的 review 待办清单。
 
 ---
 
@@ -407,32 +415,27 @@ Type `/loop-status` for a quick, read-only overview of your project:
 **Example output: / 示例输出：**
 
 ```
-=== Open PRs ===
-#22 Fix login timeout handling (dingzhen, 2 hours ago)
+=== PRs Awaiting Your Review ===
 
-=== P0-critical ===
-  (none)
+Group: auth (3 PRs)
+  #22 Fix login crash         CI ✅  ready for review
+  #23 Token refresh fix       CI ✅  ready for review
+  #24 Session expiry          CI ✅  ready for review
+  → Review together, merge: #22 → #23 → #24
 
-=== P1-high ===
-  #7 Add input validation for API endpoints
-  #25 Fix memory leak in WebSocket handler
+Group: dashboard (2 PRs)
+  #25 Chart rendering fix     CI ✅  ready for review
+  #26 Filter fix              CI ⏳  running
+  → Wait for #26 CI, then review together
 
-=== P2-medium ===
-  #20 Redesign authentication flow
+=== Open Issues ===
+P0-critical: (none)
+P1-high: #7, #25
+P2-medium: #20
+P3-low: #30
+Unlabeled: #31
 
-=== P3-low ===
-  #30 Update README badges
-
-=== Unlabeled ===
-  #31 Investigate slow startup time
-
-=== Needs Human Decision ===
-  #14 Choose between MongoDB and PostgreSQL
-
-=== Needs Plan ===
-  #20 Redesign authentication flow
-
-=== Last 3 iterations ===
+=== Last Session ===
 (shows recent loop-history.md entries)
 ```
 
@@ -441,7 +444,7 @@ The agent then provides a recommended next action:
 然后智能体会给出推荐的下一步操作：
 
 ```
-Suggested: Run /loop to process #7 (P1-high — Add input validation)
+Suggested: Review auth group PRs (#22-#24), then run /loop
 ```
 
 ---

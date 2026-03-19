@@ -26,7 +26,7 @@ Thank you for your interest in contributing! Here's how to get started.
 3. Test the `install.sh` script in a clean directory:
    ```bash
    mkdir /tmp/test-project && cd /tmp/test-project && git init
-   bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --workflows-only
+   bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
    ```
 
 4. Submit a PR with a clear description and `Closes #N`.
@@ -43,7 +43,7 @@ Thank you for your interest in contributing! Here's how to get started.
 3. 在一个干净的目录中测试 `install.sh`：
    ```bash
    mkdir /tmp/test-project && cd /tmp/test-project && git init
-   bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --workflows-only
+   bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
    ```
 
 4. 提交 PR，附上清晰描述和 `Closes #N`。
