@@ -7,10 +7,11 @@
 **面向 AI 编程智能体的结构化 Issue 处理工具包**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/Gzbox/loop-kit)](https://github.com/Gzbox/loop-kit/releases)
 [![GitHub Issues](https://img.shields.io/github/issues/Gzbox/loop-kit)](https://github.com/Gzbox/loop-kit/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Gzbox/loop-kit/pulls)
 
-[English](#-overview) · [中文](#-概述)
+[English](#-overview) · [中文](#-概述) · [📖 Guide / 使用教程](docs/guide.md)
 
 ---
 
@@ -136,6 +137,8 @@ loop-kit/
 │       ├── PULL_REQUEST_TEMPLATE.md
 │       └── workflows/
 │           └── auto-label-issues.yml
+├── docs/
+│   └── guide.md                   # Usage tutorial (EN/中文)
 ├── install.sh                     # One-command installer
 ├── CONTRIBUTING.md                # Contributing guide (EN/中文)
 └── README.md
@@ -181,6 +184,14 @@ Loop Kit 会智能适配你的项目配置：
 |:-------------------|:-------------------|
 | [`gh` CLI](https://cli.github.com/) | Authenticated with repo access / 已认证且有仓库访问权限 |
 | AI Coding Agent | Supports `/workflow` commands (e.g., Antigravity, Claude Code) / 支持 `/workflow` 命令的 AI 编程智能体 |
+
+<br/>
+
+## 📖 Documentation / 文档
+
+For a complete step-by-step tutorial, see the **[Usage Guide](docs/guide.md)**.
+
+完整的逐步使用教程，请参阅 **[使用指南](docs/guide.md)**。
 
 <br/>
 

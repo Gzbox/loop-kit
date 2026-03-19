@@ -1,0 +1,74 @@
+# Release Workflow
+#
+# Automatically creates a GitHub Release with auto-generated changelog
+# when a version tag (v*) is pushed.
+#
+# Usage:
+#   git tag -a v1.1.0 -m "v1.1.0 — description"
+#   git push origin --tags
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          PREV_TAG=$(git tag --sort=-version:refname | head -n 2 | tail -n 1)
+          CURRENT_TAG=${GITHUB_REF#refs/tags/}
+
+          echo "## What's Changed" > changelog.md
+          echo "" >> changelog.md
+
+          if [ -n "$PREV_TAG" ] && [ "$PREV_TAG" != "$CURRENT_TAG" ]; then
+            # Group commits by type
+            echo "### 🚀 Features" >> changelog.md
+            git log ${PREV_TAG}..${CURRENT_TAG} --pretty=format:"- %s" --grep="^feat" >> changelog.md || true
+            echo "" >> changelog.md
+            echo "" >> changelog.md
+
+            echo "### 🐛 Bug Fixes" >> changelog.md
+            git log ${PREV_TAG}..${CURRENT_TAG} --pretty=format:"- %s" --grep="^fix" >> changelog.md || true
+            echo "" >> changelog.md
+            echo "" >> changelog.md
+
+            echo "### 🔧 Maintenance" >> changelog.md
+            git log ${PREV_TAG}..${CURRENT_TAG} --pretty=format:"- %s" --grep="^chore" >> changelog.md || true
+            echo "" >> changelog.md
+            echo "" >> changelog.md
+
+            echo "### 📝 All Changes" >> changelog.md
+            git log ${PREV_TAG}..${CURRENT_TAG} --pretty=format:"- %s (%h)" >> changelog.md
+            echo "" >> changelog.md
+
+            echo "**Full Changelog**: https://github.com/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${CURRENT_TAG}" >> changelog.md
+          else
+            echo "🎉 Initial release" >> changelog.md
+            echo "" >> changelog.md
+            git log --pretty=format:"- %s (%h)" >> changelog.md
+          fi
+
+          cat changelog.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: changelog.md
+          generate_release_notes: false
+          make_latest: true
