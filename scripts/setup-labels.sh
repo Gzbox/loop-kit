@@ -55,23 +55,30 @@ if ! $QUIET; then
   echo ""
 fi
 
+# Redirect output in quiet mode
+if $QUIET; then
+  exec 3>/dev/null
+else
+  exec 3>&1
+fi
+
 # Priority labels
-echo "Creating priority labels..."
-gh label create "P0-critical" --color "B60205" --description "Critical: blocks all progress" --force
-gh label create "P1-high"     --color "D93F0B" --description "High priority: core functionality" --force
-gh label create "P2-medium"   --color "FBCA04" --description "Medium priority: quality improvements" --force
-gh label create "P3-low"      --color "0E8A16" --description "Low priority: polish and nice-to-have" --force
+echo "Creating priority labels..." >&3
+gh label create "P0-critical" --color "B60205" --description "Critical: blocks all progress" --force >&3 2>/dev/null
+gh label create "P1-high"     --color "D93F0B" --description "High priority: core functionality" --force >&3 2>/dev/null
+gh label create "P2-medium"   --color "FBCA04" --description "Medium priority: quality improvements" --force >&3 2>/dev/null
+gh label create "P3-low"      --color "0E8A16" --description "Low priority: polish and nice-to-have" --force >&3 2>/dev/null
 
 # Classification labels
-echo "Creating classification labels..."
-gh label create "plan-needed"          --color "5319E7" --description "Requires design plan before implementation" --force
-gh label create "skip-human-decision"  --color "D4C5F9" --description "Needs human decision — do not auto-implement" --force
+echo "Creating classification labels..." >&3
+gh label create "plan-needed"          --color "5319E7" --description "Requires design plan before implementation" --force >&3 2>/dev/null
+gh label create "skip-human-decision"  --color "D4C5F9" --description "Needs human decision — do not auto-implement" --force >&3 2>/dev/null
 
 # Platform-specific labels (optional)
 if [ ${#PLATFORM_LABELS[@]} -gt 0 ]; then
-  echo "Creating platform labels..."
+  echo "Creating platform labels..." >&3
   for label in "${PLATFORM_LABELS[@]}"; do
-    gh label create "$label" --color "006B75" --description "Requires specific platform for validation" --force
+    gh label create "$label" --color "006B75" --description "Requires specific platform for validation" --force >&3 2>/dev/null
   done
 fi
 

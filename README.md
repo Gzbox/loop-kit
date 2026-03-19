@@ -71,9 +71,10 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 ### Installer Options / 安装器选项
 
 ```bash
-bash <(curl -sL .../install.sh) --workflows-only   # Only workflows / 仅安装工作流
-bash <(curl -sL .../install.sh) --no-labels         # Skip label creation / 跳过标签创建
-bash <(curl -sL .../install.sh) --no-agents-md      # Skip AGENTS.md / 跳过 AGENTS.md
+REPO="https://raw.githubusercontent.com/Gzbox/loop-kit/main"
+bash <(curl -sL $REPO/install.sh) --workflows-only   # Only workflows / 仅安装工作流
+bash <(curl -sL $REPO/install.sh) --no-labels         # Skip label creation / 跳过标签创建
+bash <(curl -sL $REPO/install.sh) --no-agents-md      # Skip AGENTS.md / 跳过 AGENTS.md
 ```
 
 <br/>
