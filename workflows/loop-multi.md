@@ -8,6 +8,8 @@ Run the `/loop` workflow across multiple repositories in sequence. Useful for ma
 
 > This workflow requires that each target repo already has Loop Kit installed (`/loop` workflow present).
 
+> **IDE-based agents** (e.g., Antigravity): This workflow works best with terminal-based agents that can switch directories. In IDE-based agents, run `/loop` separately in each project's workspace instead.
+
 ## Configuration
 
 Before running, define the target repositories. The agent should look for a config file:

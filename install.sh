@@ -135,10 +135,15 @@ if $INSTALL_LABELS; then
   rm -f "$LABEL_SCRIPT"
 fi
 
+# 5. Version file
+echo "$LOOP_KIT_VERSION" > .agents/.loop-kit-version
+echo "   ✅ .agents/.loop-kit-version ($LOOP_KIT_VERSION)"
+
 echo ""
 echo "🎉 Loop Kit installed!"
 echo ""
 echo "Next steps:"
 echo "  1. Edit AGENTS.md — fill in your project's build/test commands"
 echo "  2. In your AI agent, type /loop to start processing issues"
-echo "  3. Type /loop-status for a quick dashboard"
+echo "  3. Type /loop-issue #N to process a specific issue"
+echo "  4. Type /loop-status for a quick dashboard"

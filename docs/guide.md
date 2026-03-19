@@ -12,13 +12,14 @@
 - [2. Installation / 安装](#2-installation--安装)
 - [3. Post-Install Setup / 安装后配置](#3-post-install-setup--安装后配置)
 - [4. Using /loop / 使用 /loop](#4-using-loop--使用-loop)
-- [5. Using /loop-status / 使用 /loop-status](#5-using-loop-status--使用-loop-status)
-- [6. Using /loop-multi / 使用 /loop-multi](#6-using-loop-multi--使用-loop-multi)
-- [7. Customization / 自定义配置](#7-customization--自定义配置)
-- [8. How Auto-Labeling Works / 自动标签的工作原理](#8-how-auto-labeling-works--自动标签的工作原理)
-- [9. Iteration History / 迭代历史](#9-iteration-history--迭代历史)
-- [10. Troubleshooting / 常见问题](#10-troubleshooting--常见问题)
-- [11. Best Practices / 最佳实践](#11-best-practices--最佳实践)
+- [5. Using /loop-issue / 使用 /loop-issue](#5-using-loop-issue--使用-loop-issue)
+- [6. Using /loop-status / 使用 /loop-status](#6-using-loop-status--使用-loop-status)
+- [7. Using /loop-multi / 使用 /loop-multi](#7-using-loop-multi--使用-loop-multi)
+- [8. Customization / 自定义配置](#8-customization--自定义配置)
+- [9. How Auto-Labeling Works / 自动标签的工作原理](#9-how-auto-labeling-works--自动标签的工作原理)
+- [10. Iteration History / 迭代历史](#10-iteration-history--迭代历史)
+- [11. Troubleshooting / 常见问题](#11-troubleshooting--常见问题)
+- [12. Best Practices / 最佳实践](#12-best-practices--最佳实践)
 
 ---
 
@@ -72,6 +73,7 @@ You'll see output like: / 你会看到类似输出：
 
 📥 Installing workflows...
    ✅ .agents/workflows/loop-job.md
+   ✅ .agents/workflows/loop-issue.md
    ✅ .agents/workflows/loop-status.md
    ✅ .agents/workflows/loop-multi.md
 📥 Installing templates...
@@ -355,7 +357,45 @@ This gives the next `/loop` context about what happened.
 
 ---
 
-## 5. Using /loop-status / 使用 /loop-status
+## 5. Using /loop-issue / 使用 /loop-issue
+
+To process a **specific** issue instead of letting the agent auto-select:
+
+要处理一个**指定的** Issue 而非让智能体自动选取：
+
+```
+/loop-issue #5
+/loop-issue 5
+```
+
+### How It Differs from /loop / 与 /loop 的区别
+
+| | `/loop` | `/loop-issue #N` |
+|:--|:--------|:------------------|
+| Step 1 (PRs) | Same / 相同 | Same / 相同 |
+| Step 2 (Select) | Auto-select by priority / 按优先级自动选取 | **Skip — go directly to #N** / **跳过 — 直接处理 #N** |
+| Step 3-5 | Same / 相同 | Same / 相同 |
+| History note | Auto-selected | "manually selected" |
+
+### When to Use / 何时使用
+
+- You know exactly which issue you want fixed / 你明确知道想修哪个 Issue
+- You want to override the priority order / 你想覆盖优先级顺序
+- The issue is blocked by priority rules but you want it done now / Issue 被优先级规则阻塞但你现在就想做
+
+### Safety Checks / 安全检查
+
+The agent still validates before starting: / 智能体在开始前仍会验证：
+
+- Is the issue open? / Issue 是否打开？
+- Does it already have a PR? / 是否已有 PR？
+- Is it blocked by dependencies? / 是否被依赖阻塞？
+
+If any check fails, the agent reports and stops. / 任何检查失败，智能体会报告并停止。
+
+---
+
+## 6. Using /loop-status / 使用 /loop-status
 
 Type `/loop-status` for a quick, read-only overview of your project:
 
@@ -407,7 +447,7 @@ Suggested: Run /loop to process #7 (P1-high — Add input validation)
 
 ---
 
-## 6. Using /loop-multi / 使用 /loop-multi
+## 7. Using /loop-multi / 使用 /loop-multi
 
 ### Setup / 配置
 
@@ -457,7 +497,7 @@ The agent will: / 智能体会：
 
 ---
 
-## 7. Customization / 自定义配置
+## 8. Customization / 自定义配置
 
 ### Custom Labels / 自定义标签
 
@@ -517,7 +557,7 @@ The workflow files in `.agents/workflows/` are plain Markdown — you can edit t
 
 ---
 
-## 8. How Auto-Labeling Works / 自动标签的工作原理
+## 9. How Auto-Labeling Works / 自动标签的工作原理
 
 When installed, an **auto-label GitHub Action** runs on every new issue:
 
@@ -545,7 +585,7 @@ The Action file is at `.github/workflows/auto-label-issues.yml`.
 
 ---
 
-## 9. Iteration History / 迭代历史
+## 10. Iteration History / 迭代历史
 
 ### What Gets Recorded / 记录了什么
 
@@ -588,7 +628,7 @@ After each `/loop` run, a summary is appended to `.agents/loop-history.md`:
 
 ---
 
-## 10. Troubleshooting / 常见问题
+## 11. Troubleshooting / 常见问题
 
 ### "gh CLI not authenticated" / "gh CLI 未认证"
 
@@ -653,7 +693,7 @@ The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffi
 
 ---
 
-## 11. Best Practices / 最佳实践
+## 12. Best Practices / 最佳实践
 
 ### Issue Quality / Issue 质量
 

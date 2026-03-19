@@ -15,38 +15,13 @@ Process a **specific** GitHub issue by number. Follows the same 5-step disciplin
 
 ## Pre-flight Check
 
-// turbo
-1. Verify gh authentication:
-   ```bash
-   gh auth status
-   ```
-
-// turbo
-2. Ensure clean working tree:
-   ```bash
-   git status --porcelain
-   ```
+Same as `/loop` — see [loop-job.md](loop-job.md) Pre-flight Check.
 
 ---
 
 ## Step 1: Process Open PRs
 
-Same as `/loop` — clear all open PRs before starting new work.
-
-// turbo
-1. Check open PRs:
-   ```bash
-   gh pr list --state open --json number,title,labels,reviewDecision
-   ```
-
-2. For each PR: check CI, fix failures, rebase conflicts, review code.
-
-3. Merge ready PRs:
-   ```bash
-   gh pr merge <N> --squash --delete-branch
-   ```
-
-4. Clear all PRs before proceeding.
+Same as `/loop` — see [loop-job.md](loop-job.md) Step 1. Clear all open PRs before starting new work.
 
 ---
 
@@ -73,38 +48,21 @@ Same as `/loop` — clear all open PRs before starting new work.
 
 ## Step 3: Classify & Implement
 
-Same decision flow as `/loop`:
+Same decision flow as `/loop` — see [loop-job.md](loop-job.md) Step 3.
 
-```
-Issue loaded
-  │
-  ├─ Labeled "skip-human-decision"?
-  │  └─ YES → Report to user why this needs human input. Stop.
-  │
-  ├─ Requires a specific platform?
-  │  └─ Current env doesn't match → Report and stop.
-  │     (User explicitly asked for this issue, so explain clearly.)
-  │
-  ├─ Labeled "plan-needed" OR involves architecture?
-  │  ├─ Plan exists? → Round 2+ (implement next sub-task)
-  │  └─ No plan? → Round 1 (produce design doc)
-  │
-  └─ Otherwise → Direct Implementation (TDD if applicable)
-```
-
-Follow the same implementation steps as `/loop` (branching, TDD, verification).
+> **Note**: If the specified issue is labeled `skip-human-decision` or requires a platform that doesn't match, explain clearly to the user (they explicitly asked for this issue).
 
 ---
 
 ## Step 4: Verify & Submit
 
-Same as `/loop` — run verification, push, create PR with `Closes #<N>`.
+Same as `/loop` — see [loop-job.md](loop-job.md) Step 4.
 
 ---
 
 ## Step 5: Record History
 
-Same as `/loop` — append to `.agents/loop-history.md`.
+Same as `/loop` — see [loop-job.md](loop-job.md) Step 5.
 Note: record that this issue was **manually selected** (not auto-picked by priority).
 
 ```markdown
