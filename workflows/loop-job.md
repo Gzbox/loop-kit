@@ -32,7 +32,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 ---
 
-## Step 1: Process Open PRs
+## Step 1: Check Open PRs
 
 // turbo
 1. Check open PRs:
@@ -45,17 +45,10 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
    - If CI fails: view logs, diagnose, fix, and push
    - If merge conflicts: rebase onto main
 
-3. Apply **priority-based code review**:
-   - **P0/P1** (bugs, security, logic errors): Must fix before merge
-   - **P2** (code quality, naming): Fix if clear and safe; flag to user if uncertain
-   - **P3** (style preferences): Note but don't block merge
+3. **Report PR status to user** — do NOT merge. Merging is the human's responsibility.
+   - Example: "PR #15: CI ✅, no conflicts, ready for review. PR #18: CI fixed, waiting for re-run."
 
-4. Merge ready PRs:
-   ```bash
-   gh pr merge <N> --squash --delete-branch
-   ```
-
-5. **Clear all PRs before proceeding to Step 2.** If any PR needs user input, report and stop.
+4. Proceed to Step 2 regardless of PR status. Issues with open PRs will be skipped in Step 2.
 
 ---
 

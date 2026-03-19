@@ -255,20 +255,20 @@ If either fails, the agent stops and reports to you.
 
 如果任一检查失败，智能体会停止并报告。
 
-#### Step 1: Process Open PRs / 审查已有 PR
+#### Step 1: Check Open PRs / 检查已有 PR
 
 ```
 Agent: "Found 2 open PRs. Let me check them..."
-  → #15: Checks pass ✅, no conflicts → merged with squash
-  → #18: CI failing → fixing test, pushing fix, then merging
-Agent: "All PRs cleared. Moving to issue selection."
+  → #15: Checks pass ✅, no conflicts → ready for review
+  → #18: CI failing → fixing test, pushing fix
+Agent: "PR status reported. Moving to issue selection."
 ```
 
 The agent: / 智能体会：
 - Checks CI status on each PR / 检查每个 PR 的 CI 状态
 - Fixes failures if possible / 尽可能修复失败
 - Resolves merge conflicts via rebase / 通过 rebase 解决合并冲突
-- Merges ready PRs with squash + delete branch / 用 squash 合并并删除分支
+- **Reports status, does NOT merge** / **报告状态，不合并（人来合并）**
 
 #### Step 2: Select Next Issue / 选取下一个 Issue
 
@@ -362,7 +362,7 @@ After all issues are processed, the agent appends to `.agents/loop-history.md`:
 ```markdown
 ## 2026-03-19 14:30
 
-**PRs processed**: #15 merged, #18 CI fixed and merged
+**PRs checked**: #15 CI ✅ ready for review, #18 CI fixed
 **Issues worked**:
   - #12 (P1-high) — fixed login timeout → PR #22
   - #25 (P2-medium) — added input validation → PR #23
@@ -518,7 +518,7 @@ The workflow files in `.agents/workflows/` are plain Markdown — you can edit t
 
 | Customization / 自定义项 | File / 文件 | How / 方法 |
 |:------------------------|:-----------|:----------|
-| Change merge strategy | `loop-job.md` Step 1 | Replace `--squash` with `--merge` or `--rebase` |
+| Change merge strategy | `loop-job.md` Step 1 | Step 1 only checks PRs; merge strategy is your choice when merging |
 | Skip PR processing | `loop-job.md` | Remove Step 1 entirely |
 | Add custom verification | `loop-job.md` Step 4 | Add your own commands after build/test |
 | Change branch naming | `loop-job.md` Step 3 | Modify the `git checkout -b` pattern |
@@ -567,17 +567,18 @@ After each `/loop` run, a summary is appended to `.agents/loop-history.md`:
 
 ## 2026-03-19 14:30
 
-**PRs processed**: #15 merged, #18 CI fixed and merged
-**Issue worked**: #12 (P1-high) — fixed login timeout handling
-**PR created**: #22
+**PRs checked**: #15 CI ✅ ready for review
+**Issues worked**:
+  - #12 (P1-high) — fixed login timeout → PR #22
+  - #25 (P2-medium) — added input validation → PR #23
 **Skipped**: #3 (already has PR), #7 (depends on #3)
 **Notes**: All tests pass. Clean build.
 
 ## 2026-03-19 10:00
 
-**PRs processed**: (none open)
-**Issue worked**: #3 (P0-critical) — fixed database connection crash
-**PR created**: #15
+**PRs checked**: (none open)
+**Issues worked**:
+  - #3 (P0-critical) — fixed database connection crash → PR #15
 **Skipped**: #14 (needs human decision)
 **Notes**: macOS validation pending — no Linux test env available.
 ```
@@ -687,7 +688,7 @@ The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffi
 |:---------------|:---------------------|
 | Daily check-in / 每日签到 | Run `/loop-status` in the morning to see what's pending / 早上运行 `/loop-status` 查看待办 |
 | Focused session / 专注处理 | Run `/loop` 2-3 times in a row to process a batch / 连续运行 `/loop` 2-3 次批量处理 |
-| Review PRs regularly / 定期审查 PR | The agent merges what it can, but you should review / 智能体会合并能合并的，但你应当审查 |
+| Review PRs regularly / 定期审查 PR | The agent creates PRs, you review and merge / 智能体创建 PR，你审查并合并 |
 
 ---
 
