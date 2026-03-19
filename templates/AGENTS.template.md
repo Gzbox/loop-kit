@@ -48,6 +48,8 @@ Example:
 - Node.js 20+ / pnpm
 - Python 3.12 / uv
 
+If certain issues **require a specific platform to validate** (e.g., macOS for Xcode builds, Linux for kernel modules), note it here. The agent will skip those issues when running on a different platform instead of claiming false validation.
+
 ## Editing rules
 
 - Keep changes focused

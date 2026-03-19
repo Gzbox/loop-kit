@@ -107,6 +107,12 @@ Issue selected
   ├─ Already has an open PR?
   │  └─ YES → SKIP. Handled in Step 1.
   │
+  ├─ Requires a specific platform? (check AGENTS.md "Platform constraints"
+  │  and issue labels like "depends-macos", "depends-linux", etc.)
+  │  └─ Current env doesn't match → SKIP with comment:
+  │     "Skipped: requires <platform> but running on <current>."
+  │     Do NOT claim validation that cannot happen on this platform.
+  │
   ├─ Labeled "plan-needed" OR issue body says "architecture" / "design decision"?
   │  ├─ Does docs/plans/<topic>.md already exist?
   │  │  ├─ YES → PLAN MODE Round 2+ (implement next sub-task)
@@ -248,3 +254,4 @@ This workflow adapts to any project:
 - **Issue is trivial (typo, one-line fix)?** Skip classification, just fix and PR
 - **Blocked on another issue?** Skip, pick the next one, report the dependency
 - **First time running?** No history file is fine — it will be created automatically
+- **Platform mismatch?** Skip issues labeled `depends-<platform>` if current env doesn't match. Never claim validation that didn't happen.
