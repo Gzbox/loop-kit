@@ -22,7 +22,12 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --help)
-      head -n 7 "$0" | tail -n +2 | sed 's/^# *//'
+      echo "Loop Kit Installer"
+      echo "Usage: bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)"
+      echo ""
+      echo "Options:"
+      echo "  --version <tag>  Install a specific version (e.g., v2.0.0). Default: main"
+      echo "  --help           Show this help"
       exit 0
       ;;
     *)
