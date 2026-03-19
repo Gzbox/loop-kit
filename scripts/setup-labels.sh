@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Setup GitHub labels for the Loop Job workflow.
-# Usage: bash .agents/workflows/setup-labels.sh [--platform <label>] [--help]
+# Usage: bash scripts/setup-labels.sh [--platform <label>] [--help]
 # Requires: gh CLI authenticated with repo access
 #
 # Options:
 #   --platform <label>   Add a platform-specific dependency label (e.g., "depends-macos")
 #                        Can be specified multiple times.
-#   --quiet              Suppress banner and "Next steps" (for scripted use)
+#   --quiet              Suppress prompts and banner (for scripted use)
 #   --help               Show this help message
 #
 # Examples:
-#   bash .agents/workflows/setup-labels.sh
-#   bash .agents/workflows/setup-labels.sh --platform depends-macos
-#   bash .agents/workflows/setup-labels.sh --platform depends-macos --platform depends-linux
+#   bash scripts/setup-labels.sh
+#   bash scripts/setup-labels.sh --platform depends-macos
+#   bash scripts/setup-labels.sh --platform depends-macos --platform depends-linux
 set -euo pipefail
 
 PLATFORM_LABELS=()
@@ -74,12 +74,26 @@ echo "Creating classification labels..." >&3
 gh label create "plan-needed"          --color "5319E7" --description "Requires design plan before implementation" --force >&3 2>/dev/null
 gh label create "skip-human-decision"  --color "D4C5F9" --description "Needs human decision — do not auto-implement" --force >&3 2>/dev/null
 
-# Platform-specific labels (optional)
+# Platform-specific labels
 if [ ${#PLATFORM_LABELS[@]} -gt 0 ]; then
   echo "Creating platform labels..." >&3
   for label in "${PLATFORM_LABELS[@]}"; do
     gh label create "$label" --color "006B75" --description "Requires specific platform for validation" --force >&3 2>/dev/null
   done
+fi
+
+# Interactive: ask about platform labels (only in non-quiet mode and when none provided via flags)
+if ! $QUIET && [ ${#PLATFORM_LABELS[@]} -eq 0 ]; then
+  echo ""
+  printf "? Add platform-specific labels? (e.g., depends-macos, depends-linux)\n"
+  printf "  Enter labels separated by spaces, or press Enter to skip: "
+  read -r platform_input </dev/tty
+  if [[ -n "$platform_input" ]]; then
+    for label in $platform_input; do
+      gh label create "$label" --color "006B75" --description "Requires specific platform for validation" --force >&3 2>/dev/null
+      echo "   ✅ $label"
+    done
+  fi
 fi
 
 echo "   ✅ Labels created"

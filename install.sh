@@ -2,28 +2,44 @@
 # Loop Kit Installer
 # Usage: bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
 #
+# Interactive mode (default): prompts for each option
+# Non-interactive mode: pass flags to skip prompts
+#
 # Options:
-#   --workflows-only   Only install workflow files (minimal)
-#   --no-labels        Skip GitHub label creation
-#   --no-agents-md     Skip AGENTS.md creation
-#   --version <tag>    Install a specific version (e.g., v1.0.0). Default: main
-#   --help             Show this help
+#   --all                Install everything without prompting
+#   --workflows-only     Only install workflow files (minimal)
+#   --no-labels          Skip GitHub label creation
+#   --no-agents-md       Skip AGENTS.md creation
+#   --no-templates       Skip Issue/PR templates
+#   --version <tag>      Install a specific version (e.g., v1.0.0). Default: main
+#   --help               Show this help
 set -euo pipefail
 
 LOOP_KIT_VERSION="${LOOP_KIT_VERSION:-main}"
 REPO_RAW="https://raw.githubusercontent.com/Gzbox/loop-kit"
 INSTALL_WORKFLOWS=true
-INSTALL_TEMPLATES=true
-INSTALL_LABELS=true
-INSTALL_AGENTS_MD=true
+INSTALL_TEMPLATES=""   # empty = ask interactively
+INSTALL_LABELS=""      # empty = ask interactively
+INSTALL_AGENTS_MD=""   # empty = ask interactively
+INTERACTIVE=true       # default: interactive mode
 
 # Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --all)
+      INSTALL_WORKFLOWS=true
+      INSTALL_TEMPLATES=true
+      INSTALL_LABELS=true
+      INSTALL_AGENTS_MD=true
+      INTERACTIVE=false
+      shift
+      ;;
     --workflows-only)
+      INSTALL_WORKFLOWS=true
       INSTALL_TEMPLATES=false
       INSTALL_LABELS=false
       INSTALL_AGENTS_MD=false
+      INTERACTIVE=false
       shift
       ;;
     --no-labels)
@@ -32,6 +48,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --no-agents-md)
       INSTALL_AGENTS_MD=false
+      shift
+      ;;
+    --no-templates)
+      INSTALL_TEMPLATES=false
       shift
       ;;
     --version)
@@ -43,7 +63,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --help)
-      head -n 10 "$0" | tail -n +2 | sed 's/^# *//'
+      head -n 16 "$0" | tail -n +2 | sed 's/^# *//'
       exit 0
       ;;
     *)
@@ -53,20 +73,91 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-echo "🔄 Loop Kit Installer (${LOOP_KIT_VERSION})"
+# Helper: ask Y/n question (default Y)
+ask() {
+  local prompt="$1" default="${2:-Y}"
+  if ! $INTERACTIVE; then return 0; fi
+  printf "%s " "$prompt"
+  read -r answer </dev/tty
+  answer="${answer:-$default}"
+  [[ "$answer" =~ ^[Yy] ]]
+}
+
 echo ""
+echo "🔄 Loop Kit Installer"
+echo ""
+
+# ── Interactive prompts ──────────────────────────────────────────
+
+if $INTERACTIVE; then
+  # Version
+  printf "? Version to install (main): "
+  read -r ver_input </dev/tty
+  if [[ -n "$ver_input" ]]; then
+    LOOP_KIT_VERSION="$ver_input"
+  fi
+
+  echo ""
+
+  # Workflows are always installed (core purpose of Loop Kit)
+  echo "   Workflows (/loop, /loop-issue, /loop-status, /loop-multi) — always installed ✓"
+  echo ""
+
+  # Templates
+  if [[ -z "$INSTALL_TEMPLATES" ]]; then
+    if ask "? Install Issue/PR templates? (Y/n)"; then
+      INSTALL_TEMPLATES=true
+    else
+      INSTALL_TEMPLATES=false
+    fi
+  fi
+
+  # AGENTS.md
+  if [[ -z "$INSTALL_AGENTS_MD" ]]; then
+    if [ -f "AGENTS.md" ]; then
+      echo "   AGENTS.md already exists — will not overwrite ✓"
+      INSTALL_AGENTS_MD=false
+    elif ask "? Create AGENTS.md template? (Y/n)"; then
+      INSTALL_AGENTS_MD=true
+    else
+      INSTALL_AGENTS_MD=false
+    fi
+  fi
+
+  # Labels
+  if [[ -z "$INSTALL_LABELS" ]]; then
+    if ask "? Create priority labels on GitHub? (Y/n)"; then
+      INSTALL_LABELS=true
+    else
+      INSTALL_LABELS=false
+    fi
+  fi
+
+  echo ""
+fi
+
+# ── Fill in defaults for non-interactive mode ────────────────────
+
+[[ -z "$INSTALL_TEMPLATES" ]] && INSTALL_TEMPLATES=true
+[[ -z "$INSTALL_LABELS" ]] && INSTALL_LABELS=true
+[[ -z "$INSTALL_AGENTS_MD" ]] && INSTALL_AGENTS_MD=true
 
 REPO_RAW="${REPO_RAW}/${LOOP_KIT_VERSION}"
 
-# Check gh CLI
-if ! command -v gh &>/dev/null; then
-  echo "⚠️  gh CLI not found. Labels won't be created."
-  echo "   Install: https://cli.github.com/"
-  INSTALL_LABELS=false
-elif ! gh auth status &>/dev/null; then
-  echo "⚠️  gh CLI not authenticated. Labels won't be created."
-  echo "   Run: gh auth login"
-  INSTALL_LABELS=false
+echo "📦 Installing Loop Kit (${LOOP_KIT_VERSION})..."
+echo ""
+
+# Check gh CLI (only matters for labels)
+if $INSTALL_LABELS; then
+  if ! command -v gh &>/dev/null; then
+    echo "⚠️  gh CLI not found. Labels won't be created."
+    echo "   Install: https://cli.github.com/"
+    INSTALL_LABELS=false
+  elif ! gh auth status &>/dev/null; then
+    echo "⚠️  gh CLI not authenticated. Labels won't be created."
+    echo "   Run: gh auth login"
+    INSTALL_LABELS=false
+  fi
 fi
 
 # Download function
@@ -84,18 +175,16 @@ download() {
   fi
 }
 
-# 1. Workflows
-if $INSTALL_WORKFLOWS; then
-  echo "📥 Installing workflows..."
-  download "$REPO_RAW/workflows/loop-job.md" ".agents/workflows/loop-job.md"
-  download "$REPO_RAW/workflows/loop-issue.md" ".agents/workflows/loop-issue.md"
-  download "$REPO_RAW/workflows/loop-status.md" ".agents/workflows/loop-status.md"
-  download "$REPO_RAW/workflows/loop-multi.md" ".agents/workflows/loop-multi.md"
-  echo "   ✅ .agents/workflows/loop-job.md"
-  echo "   ✅ .agents/workflows/loop-issue.md"
-  echo "   ✅ .agents/workflows/loop-status.md"
-  echo "   ✅ .agents/workflows/loop-multi.md"
-fi
+# 1. Workflows (always installed)
+echo "📥 Installing workflows..."
+download "$REPO_RAW/workflows/loop-job.md" ".agents/workflows/loop-job.md"
+download "$REPO_RAW/workflows/loop-issue.md" ".agents/workflows/loop-issue.md"
+download "$REPO_RAW/workflows/loop-status.md" ".agents/workflows/loop-status.md"
+download "$REPO_RAW/workflows/loop-multi.md" ".agents/workflows/loop-multi.md"
+echo "   ✅ .agents/workflows/loop-job.md"
+echo "   ✅ .agents/workflows/loop-issue.md"
+echo "   ✅ .agents/workflows/loop-status.md"
+echo "   ✅ .agents/workflows/loop-multi.md"
 
 # 2. Templates
 if $INSTALL_TEMPLATES; then

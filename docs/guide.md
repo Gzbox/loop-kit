@@ -69,7 +69,17 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 You'll see output like: / 你会看到类似输出：
 
 ```
-🔄 Loop Kit Installer (main)
+🔄 Loop Kit Installer
+
+? Version to install (main):
+
+   Workflows (/loop, /loop-issue, /loop-status, /loop-multi) — always installed ✓
+
+? Install Issue/PR templates? (Y/n) Y
+? Create AGENTS.md template? (Y/n) Y
+? Create priority labels on GitHub? (Y/n) Y
+
+📦 Installing Loop Kit (main)...
 
 📥 Installing workflows...
    ✅ .agents/workflows/loop-job.md
@@ -83,13 +93,15 @@ You'll see output like: / 你会看到类似输出：
    ✅ AGENTS.md (template — edit the {{placeholders}})
 🏷️  Creating GitHub labels...
    ✅ Labels created
+   ✅ .agents/.loop-kit-version (main)
 
 🎉 Loop Kit installed!
 
 Next steps:
   1. Edit AGENTS.md — fill in your project's build/test commands
   2. In your AI agent, type /loop to start processing issues
-  3. Type /loop-status for a quick dashboard
+  3. Type /loop-issue #N to process a specific issue
+  4. Type /loop-status for a quick dashboard
 ```
 
 ### Option B: Minimum Install (1 file) / 最小安装（1 个文件）
@@ -128,9 +140,11 @@ LOOP_KIT_VERSION=v1.0.0 bash <(curl -sL https://raw.githubusercontent.com/Gzbox/
 
 | Flag | Effect | 说明 |
 |:-----|:-------|:-----|
-| *(none)* | Full install | 完整安装 |
+| *(none)* | Interactive prompts | 交互式引导 |
+| `--all` | Install everything without prompting | 无提示安装全部 |
 | `--workflows-only` | Install only workflow files | 仅安装工作流文件 |
 | `--no-labels` | Skip GitHub label creation | 跳过 GitHub 标签创建 |
+| `--no-templates` | Skip Issue/PR templates | 跳过 Issue/PR 模板 |
 | `--no-agents-md` | Skip AGENTS.md template | 跳过 AGENTS.md 模板 |
 | `--version <tag>` | Install a specific version | 安装指定版本 |
 | `--help` | Show usage help | 显示帮助信息 |
