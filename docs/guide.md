@@ -14,12 +14,11 @@
 - [4. Using /loop / 使用 /loop](#4-using-loop--使用-loop)
 - [5. Using /loop-issue / 使用 /loop-issue](#5-using-loop-issue--使用-loop-issue)
 - [6. Using /loop-status / 使用 /loop-status](#6-using-loop-status--使用-loop-status)
-- [7. Using /loop-multi / 使用 /loop-multi](#7-using-loop-multi--使用-loop-multi)
-- [8. Customization / 自定义配置](#8-customization--自定义配置)
-- [9. How Auto-Labeling Works / 自动标签的工作原理](#9-how-auto-labeling-works--自动标签的工作原理)
-- [10. Iteration History / 迭代历史](#10-iteration-history--迭代历史)
-- [11. Troubleshooting / 常见问题](#11-troubleshooting--常见问题)
-- [12. Best Practices / 最佳实践](#12-best-practices--最佳实践)
+- [7. Customization / 自定义配置](#7-customization--自定义配置)
+- [8. How Auto-Labeling Works / 自动标签的工作原理](#8-how-auto-labeling-works--自动标签的工作原理)
+- [9. Iteration History / 迭代历史](#9-iteration-history--迭代历史)
+- [10. Troubleshooting / 常见问题](#10-troubleshooting--常见问题)
+- [11. Best Practices / 最佳实践](#11-best-practices--最佳实践)
 
 ---
 
@@ -73,7 +72,7 @@ You'll see output like: / 你会看到类似输出：
 
 ? Version to install (main):
 
-   Workflows (/loop, /loop-issue, /loop-status, /loop-multi) — always installed ✓
+   Workflows (/loop, /loop-issue, /loop-status) — always installed ✓
 
 ? Install Issue/PR templates? (Y/n) Y
 ? Create AGENTS.md template? (Y/n) Y
@@ -85,7 +84,6 @@ You'll see output like: / 你会看到类似输出：
    ✅ .agents/workflows/loop-job.md
    ✅ .agents/workflows/loop-issue.md
    ✅ .agents/workflows/loop-status.md
-   ✅ .agents/workflows/loop-multi.md
 📥 Installing templates...
    ✅ .github/ISSUE_TEMPLATE/
    ✅ .github/PULL_REQUEST_TEMPLATE.md
@@ -461,57 +459,7 @@ Suggested: Run /loop to process #7 (P1-high — Add input validation)
 
 ---
 
-## 7. Using /loop-multi / 使用 /loop-multi
-
-### Setup / 配置
-
-For processing issues across multiple repositories, create a config file:
-
-要跨多个仓库处理 Issue，需先创建配置文件：
-
-```bash
-# Create the config file / 创建配置文件
-cat > .agents/loop-repos.txt << 'EOF'
-# One repo per line, format: owner/repo or local path
-# 每行一个仓库，格式：owner/repo 或本地路径
-Gzbox/project-alpha
-Gzbox/project-beta
-/Users/me/local-project
-EOF
-```
-
-### Running / 运行
-
-```
-/loop-multi
-```
-
-The agent will: / 智能体会：
-1. Read `loop-repos.txt` / 读取配置文件
-2. For each repo, execute one `/loop` iteration / 对每个仓库执行一轮 `/loop`
-3. Report a consolidated summary / 输出汇总报告
-
-**Example output: / 示例输出：**
-
-```markdown
-## Multi-Repo Loop Summary — 2026-03-19 15:00
-
-| Repo | Status | Issue Worked | PR Created |
-|------|--------|--------------|------------|
-| Gzbox/project-alpha | ✅ Completed | #12 (P1) | #15 |
-| Gzbox/project-beta | ⏭️ No issues | — | — |
-| /Users/me/local-project | ❌ No Loop Kit | — | — |
-```
-
-### Requirements / 要求
-
-- Each target repo must already have Loop Kit installed / 每个目标仓库需已安装 Loop Kit
-- For GitHub repos: `gh` must have access / 对 GitHub 仓库：`gh` 需有访问权限
-- For local repos: the path must exist and be a git repo / 本地仓库路径必须存在且是 git 仓库
-
----
-
-## 8. Customization / 自定义配置
+## 7. Customization / 自定义配置
 
 ### Custom Labels / 自定义标签
 
@@ -571,7 +519,7 @@ The workflow files in `.agents/workflows/` are plain Markdown — you can edit t
 
 ---
 
-## 9. How Auto-Labeling Works / 自动标签的工作原理
+## 8. How Auto-Labeling Works / 自动标签的工作原理
 
 When installed, an **auto-label GitHub Action** runs on every new issue:
 
@@ -599,7 +547,7 @@ The Action file is at `.github/workflows/auto-label-issues.yml`.
 
 ---
 
-## 10. Iteration History / 迭代历史
+## 9. Iteration History / 迭代历史
 
 ### What Gets Recorded / 记录了什么
 
@@ -642,7 +590,7 @@ After each `/loop` run, a summary is appended to `.agents/loop-history.md`:
 
 ---
 
-## 11. Troubleshooting / 常见问题
+## 10. Troubleshooting / 常见问题
 
 ### "gh CLI not authenticated" / "gh CLI 未认证"
 
@@ -707,7 +655,7 @@ The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffi
 
 ---
 
-## 12. Best Practices / 最佳实践
+## 11. Best Practices / 最佳实践
 
 ### Issue Quality / Issue 质量
 
@@ -732,7 +680,6 @@ The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffi
 |:---------------|:---------------------|
 | Daily check-in / 每日签到 | Run `/loop-status` in the morning to see what's pending / 早上运行 `/loop-status` 查看待办 |
 | Focused session / 专注处理 | Run `/loop` 2-3 times in a row to process a batch / 连续运行 `/loop` 2-3 次批量处理 |
-| Multi-repo maintenance / 多仓库维护 | Run `/loop-multi` weekly to keep all repos healthy / 每周运行 `/loop-multi` 维护所有仓库 |
 | Review PRs regularly / 定期审查 PR | The agent merges what it can, but you should review / 智能体会合并能合并的，但你应当审查 |
 
 ---

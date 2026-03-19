@@ -180,11 +180,9 @@ echo "📥 Installing workflows..."
 download "$REPO_RAW/workflows/loop-job.md" ".agents/workflows/loop-job.md"
 download "$REPO_RAW/workflows/loop-issue.md" ".agents/workflows/loop-issue.md"
 download "$REPO_RAW/workflows/loop-status.md" ".agents/workflows/loop-status.md"
-download "$REPO_RAW/workflows/loop-multi.md" ".agents/workflows/loop-multi.md"
 echo "   ✅ .agents/workflows/loop-job.md"
 echo "   ✅ .agents/workflows/loop-issue.md"
 echo "   ✅ .agents/workflows/loop-status.md"
-echo "   ✅ .agents/workflows/loop-multi.md"
 
 # 2. Templates
 if $INSTALL_TEMPLATES; then

@@ -124,8 +124,7 @@ loop-kit/
 ├── workflows/
 │   ├── loop-job.md                # /loop — 5-step issue processing
 │   ├── loop-issue.md              # /loop-issue — process a specific issue
-│   ├── loop-status.md             # /loop-status — read-only dashboard
-│   └── loop-multi.md              # /loop-multi — multi-repo loop
+│   └── loop-status.md             # /loop-status — read-only dashboard
 ├── scripts/
 │   └── setup-labels.sh            # Create GitHub labels
 ├── templates/
@@ -155,7 +154,6 @@ loop-kit/
 | 🔄 | **Structured Loop** / 结构化闭环 | Disciplined 5-step issue processing flow / 有纪律的五步 Issue 处理流程 |
 | 🎯 | **Targeted Loop** / 指定处理 | `/loop-issue #N` — process a specific issue / 指定处理某个 Issue |
 | 📊 | **Dashboard** / 仪表盘 | `/loop-status` — quick read-only project overview / 快速只读项目概览 |
-| 🌐 | **Multi-Repo** / 多仓库 | `/loop-multi` — process issues across repos in sequence / 按顺序跨仓库处理 Issue |
 | 🏷️ | **Auto-labeling** / 自动标签 | GitHub Action applies labels from Issue form dropdowns / 从 Issue 表单下拉选项自动打标签 |
 | 📝 | **History Tracking** / 历史追踪 | Each iteration logged for cross-round context / 每轮迭代记录上下文，便于后续回溯 |
 | 🛡️ | **Pre-flight Checks** / 预检 | Auth + clean tree verification before start / 启动前验证认证和工作树状态 |
