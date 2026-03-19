@@ -118,11 +118,11 @@ After installation, type `/loop-init` in your AI agent. The AI will:
 >
 > 查看生成的 `AGENTS.md` 并按需调整。AI 会尽力而为，但你更了解你的项目。
 
-### Step 2: Create GitHub Issues / 创建 GitHub Issues
+### Create GitHub Issues / 创建 GitHub Issues
 
-Go to your repo's Issues tab. If templates were installed, you'll see:
+Go to your repo's Issues tab. You'll see:
 
-进入仓库的 Issues 页面。如果安装了模板，你会看到：
+进入仓库的 Issues 页面。你会看到：
 
 - **Bug Report** — for reporting bugs (auto-labeled `bug`)
 - **Feature Request** — for suggesting features (auto-labeled `enhancement`)
@@ -153,13 +153,15 @@ Description:
 Done When: User can toggle between light and dark themes
 ```
 
-### Step 3: Commit Installed Files / 提交安装文件
+### Commit Installed Files / 提交安装文件
 
 ```bash
-git add .agents/ .github/ AGENTS.md
+git add .agents/ .github/
 git commit -m "chore: install Loop Kit"
 git push
 ```
+
+> **Note**: `AGENTS.md` is committed separately by `/loop-init` in the step above.
 
 ---
 
