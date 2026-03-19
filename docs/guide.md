@@ -687,7 +687,7 @@ The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffi
 | Pattern / 模式 | Recommendation / 建议 |
 |:---------------|:---------------------|
 | Daily check-in / 每日签到 | Run `/loop-status` in the morning to see what's pending / 早上运行 `/loop-status` 查看待办 |
-| Focused session / 专注处理 | Run `/loop` 2-3 times in a row to process a batch / 连续运行 `/loop` 2-3 次批量处理 |
+| Focused session / 专注处理 | Run `/loop` — it processes all actionable issues in one session / 运行 `/loop` —— 一次处理所有可操作的 Issue |
 | Review PRs regularly / 定期审查 PR | The agent creates PRs, you review and merge / 智能体创建 PR，你审查并合并 |
 
 ---

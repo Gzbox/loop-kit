@@ -27,13 +27,13 @@
 
 Loop Kit is a **reusable, language-agnostic** toolkit that transforms GitHub Issues into a structured, repeatable workflow for AI coding agents. No matter your tech stack, Loop Kit gives your agent a disciplined 5-step loop:
 
-**Review PRs → Select Issue → Classify & Implement → Submit PR → Record History**
+**Check PRs → [Select Issue → Classify & Implement → Submit PR] × N → Record History**
 
 ## 📖 概述
 
 Loop Kit 是一个**可复用、语言无关**的工具包，它将 GitHub Issues 转化为面向 AI 编程智能体的结构化、可重复工作流。不论你的技术栈如何，Loop Kit 都能为你的智能体提供一套有纪律的五步闭环：
 
-**审查 PR → 选取 Issue → 分类并实现 → 提交 PR → 记录历史**
+**检查 PR → [选取 Issue → 分类并实现 → 提交 PR] × N → 记录历史**
 
 <br/>
 
