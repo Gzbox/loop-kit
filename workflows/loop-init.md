@@ -103,6 +103,15 @@ If `AGENTS.md` does not exist, create it with the following structure:
 - Run full test suite before committing
 - Do not modify generated files
 - Follow existing code style
+
+## Loop Settings
+[Adjust these to control /loop behavior — defaults work for most projects]
+
+| Setting | Value | Description |
+|:--------|:------|:------------|
+| Session cap | 10 | Max PRs created per `/loop` run |
+| Pending PR limit | 10 | Stop creating PRs if this many await review |
+| Max group size | 5 | Max issues per group (auto-splits if larger) |
 ```
 
 Commit the generated `AGENTS.md`:

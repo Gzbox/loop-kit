@@ -63,9 +63,10 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
    Process review feedback by priority: P0 PRs first.
 
 5. **Pending PR check** — count open PRs awaiting review:
-   - If **≥ 10 pending PRs** → do NOT create new PRs. Report:
+   - Read `Pending PR limit` from `AGENTS.md` Loop Settings (default: 10)
+   - If pending PRs ≥ limit → do NOT create new PRs. Report:
      "You have N PRs awaiting review. Please review them before running /loop again."
-   - Proceed to Step 5 (Record History) and stop.
+   - Proceed to Step 5 (Record Session History) and stop.
 
 6. **Report PR status** — do NOT merge. Merging is the human's responsibility.
 
@@ -95,7 +96,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
    - If issues have `component:xxx` labels → group by label
    - Otherwise → read titles and bodies, identify related issues (same module, same feature area, same page)
    - Unrelated issues → `standalone` group
-   - **Max 5 issues per group** — split into sub-groups if larger (e.g., `auth-1`, `auth-2`)
+   - **Max group size** from `AGENTS.md` Loop Settings (default: 5) — split into sub-groups if larger (e.g., `auth-1`, `auth-2`)
 
 5. **Order groups by priority** (highest-priority issue in each group determines group priority):
    - `P0-critical` > `P1-high` > `P2-medium` > `P3-low`
@@ -231,9 +232,10 @@ Issue selected
    gh pr edit <N> --add-label "component:<name>"
    ```
 
-6. **Loop check** — are there more actionable issues (within session cap of ~10 PRs)?
-   - **YES** → `git checkout main && git pull`, return to Step 2 (pick next issue, same group first)
-   - **NO** → Proceed to Step 5
+6. **Loop check** — are there more actionable issues?
+   - Read `Session cap` from `AGENTS.md` Loop Settings (default: 10)
+   - **Below cap + more issues** → `git checkout main && git pull`, return to Step 2 (pick next issue, same group first)
+   - **No more issues** → Proceed to Step 5
    - **Session cap reached** → Proceed to Step 5, note remaining issues
 
 ---
