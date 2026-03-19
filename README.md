@@ -75,6 +75,7 @@ REPO="https://raw.githubusercontent.com/Gzbox/loop-kit/main"
 bash <(curl -sL $REPO/install.sh) --workflows-only   # Only workflows / 仅安装工作流
 bash <(curl -sL $REPO/install.sh) --no-labels         # Skip label creation / 跳过标签创建
 bash <(curl -sL $REPO/install.sh) --no-agents-md      # Skip AGENTS.md / 跳过 AGENTS.md
+bash <(curl -sL $REPO/install.sh) --version v1.0.0    # Pin to version / 锁定版本
 ```
 
 <br/>
