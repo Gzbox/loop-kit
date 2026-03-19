@@ -6,6 +6,7 @@
 # Options:
 #   --platform <label>   Add a platform-specific dependency label (e.g., "depends-macos")
 #                        Can be specified multiple times.
+#   --quiet              Suppress banner and "Next steps" (for scripted use)
 #   --help               Show this help message
 #
 # Examples:
@@ -15,6 +16,7 @@
 set -euo pipefail
 
 PLATFORM_LABELS=()
+QUIET=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -27,8 +29,12 @@ while [[ $# -gt 0 ]]; do
       PLATFORM_LABELS+=("$2")
       shift 2
       ;;
+    --quiet)
+      QUIET=true
+      shift
+      ;;
     --help)
-      head -n 14 "$0" | tail -n +2 | sed 's/^# *//'
+      head -n 15 "$0" | tail -n +2 | sed 's/^# *//'
       exit 0
       ;;
     *)
@@ -44,8 +50,10 @@ if ! gh auth status &>/dev/null; then
   exit 1
 fi
 
-echo "🏷  Setting up Loop Job labels..."
-echo ""
+if ! $QUIET; then
+  echo "🏷  Setting up Loop Job labels..."
+  echo ""
+fi
 
 # Priority labels
 echo "Creating priority labels..."
@@ -67,10 +75,11 @@ if [ ${#PLATFORM_LABELS[@]} -gt 0 ]; then
   done
 fi
 
-echo ""
-echo "✅ Labels created successfully."
-echo ""
-echo "Next steps:"
-echo "  1. Copy issue templates:  cp -r .agents/templates/github/ .github/"
-echo "  2. Customize AGENTS.md:   cp .agents/templates/AGENTS.template.md AGENTS.md"
-echo "  3. Start the loop:        In Antigravity, type /loop"
+echo "   ✅ Labels created"
+
+if ! $QUIET; then
+  echo ""
+  echo "Next steps:"
+  echo "  1. Install the full toolkit:  bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)"
+  echo "  2. Or start directly:         In your AI coding agent, type /loop"
+fi

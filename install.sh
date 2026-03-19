@@ -6,10 +6,12 @@
 #   --workflows-only   Only install workflow files (minimal)
 #   --no-labels        Skip GitHub label creation
 #   --no-agents-md     Skip AGENTS.md creation
+#   --version <tag>    Install a specific version (e.g., v1.0.0). Default: main
 #   --help             Show this help
 set -euo pipefail
 
-REPO_RAW="https://raw.githubusercontent.com/Gzbox/loop-kit/main"
+LOOP_KIT_VERSION="${LOOP_KIT_VERSION:-main}"
+REPO_RAW="https://raw.githubusercontent.com/Gzbox/loop-kit"
 INSTALL_WORKFLOWS=true
 INSTALL_TEMPLATES=true
 INSTALL_LABELS=true
@@ -32,8 +34,16 @@ while [[ $# -gt 0 ]]; do
       INSTALL_AGENTS_MD=false
       shift
       ;;
+    --version)
+      if [[ -z "${2:-}" ]]; then
+        echo "Error: --version requires a tag name (e.g., v1.0.0)"
+        exit 1
+      fi
+      LOOP_KIT_VERSION="$2"
+      shift 2
+      ;;
     --help)
-      head -n 8 "$0" | tail -n +2 | sed 's/^# *//'
+      head -n 10 "$0" | tail -n +2 | sed 's/^# *//'
       exit 0
       ;;
     *)
@@ -43,8 +53,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-echo "🔄 Loop Kit Installer"
+echo "🔄 Loop Kit Installer (${LOOP_KIT_VERSION})"
 echo ""
+
+REPO_RAW="${REPO_RAW}/${LOOP_KIT_VERSION}"
 
 # Check gh CLI
 if ! command -v gh &>/dev/null; then
@@ -77,8 +89,10 @@ if $INSTALL_WORKFLOWS; then
   echo "📥 Installing workflows..."
   download "$REPO_RAW/workflows/loop-job.md" ".agents/workflows/loop-job.md"
   download "$REPO_RAW/workflows/loop-status.md" ".agents/workflows/loop-status.md"
+  download "$REPO_RAW/workflows/loop-multi.md" ".agents/workflows/loop-multi.md"
   echo "   ✅ .agents/workflows/loop-job.md"
   echo "   ✅ .agents/workflows/loop-status.md"
+  echo "   ✅ .agents/workflows/loop-multi.md"
 fi
 
 # 2. Templates
@@ -110,16 +124,13 @@ if $INSTALL_AGENTS_MD; then
   fi
 fi
 
-# 4. Labels
+# 4. Labels (delegate to setup-labels.sh)
 if $INSTALL_LABELS; then
   echo "🏷️  Creating GitHub labels..."
-  gh label create "P0-critical" --color "B60205" --description "Critical: blocks all progress" --force 2>/dev/null
-  gh label create "P1-high"     --color "D93F0B" --description "High priority: core functionality" --force 2>/dev/null
-  gh label create "P2-medium"   --color "FBCA04" --description "Medium priority: quality improvements" --force 2>/dev/null
-  gh label create "P3-low"      --color "0E8A16" --description "Low priority: polish and nice-to-have" --force 2>/dev/null
-  gh label create "plan-needed"          --color "5319E7" --description "Requires design plan before implementation" --force 2>/dev/null
-  gh label create "skip-human-decision"  --color "D4C5F9" --description "Needs human decision — do not auto-implement" --force 2>/dev/null
-  echo "   ✅ Labels created"
+  LABEL_SCRIPT=$(mktemp)
+  download "$REPO_RAW/scripts/setup-labels.sh" "$LABEL_SCRIPT"
+  bash "$LABEL_SCRIPT" --quiet
+  rm -f "$LABEL_SCRIPT"
 fi
 
 echo ""

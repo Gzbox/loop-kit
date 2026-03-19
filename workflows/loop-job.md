@@ -202,6 +202,8 @@ Issue selected
    - <what was tested / validated>
    - <any caveats or pending validation>"
    ```
+   If `gh pr create` fails (e.g., template parsing error, permissions), try with `--fill` flag as fallback.
+   If it still fails, report the error to the user and stop.
 
 5. **Report to user**: summarize what was done, what issue was addressed, and any follow-up needed.
 

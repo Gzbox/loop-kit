@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint install.sh
+        run: shellcheck install.sh
+
+      - name: Lint setup-labels.sh
+        run: shellcheck scripts/setup-labels.sh
+
+  dry-run:
+    name: Install Dry Run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify all referenced files exist
+        run: |
+          echo "Checking file structure..."
+          files=(
+            "workflows/loop-job.md"
+            "workflows/loop-status.md"
+            "workflows/loop-multi.md"
+            "scripts/setup-labels.sh"
+            "templates/AGENTS.template.md"
+            "templates/AGENTS.template.zh-CN.md"
+            "templates/github/ISSUE_TEMPLATE/bug_report.yml"
+            "templates/github/ISSUE_TEMPLATE/feature_request.yml"
+            "templates/github/ISSUE_TEMPLATE/config.yml"
+            "templates/github/PULL_REQUEST_TEMPLATE.md"
+            "templates/github/workflows/auto-label-issues.yml"
+            "install.sh"
+            "CONTRIBUTING.md"
+            "README.md"
+            "LICENSE"
+          )
+          missing=0
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "❌ Missing: $f"
+              missing=$((missing + 1))
+            else
+              echo "✅ $f"
+            fi
+          done
+          if [ $missing -gt 0 ]; then
+            echo "::error::$missing file(s) missing!"
+            exit 1
+          fi
+          echo "All files present ✅"
+
+      - name: Verify scripts are executable
+        run: |
+          for script in install.sh scripts/setup-labels.sh; do
+            if [ ! -x "$script" ]; then
+              echo "::error::$script is not executable"
+              exit 1
+            fi
+          done
+          echo "All scripts executable ✅"
+
+      - name: Test --help flags
+        run: |
+          bash install.sh --help
+          bash scripts/setup-labels.sh --help

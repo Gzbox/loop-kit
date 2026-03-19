@@ -15,7 +15,8 @@ Read-only dashboard for the current project. Shows what's pending without making
 // turbo
 2. Issue summary by priority:
    ```bash
-   echo "=== P0-critical ===" && gh issue list --state open --label P0-critical --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P1-high ===" && gh issue list --state open --label P1-high --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P2-medium ===" && gh issue list --state open --label P2-medium --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P3-low ===" && gh issue list --state open --label P3-low --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== Unlabeled ===" && gh issue list --state open --json number,title,labels --jq '.[] | select(.labels | length == 0) | "#\(.number) \(.title)"'
+   echo "=== P0-critical ===" && gh issue list --state open --label P0-critical --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P1-high ===" && gh issue list --state open --label P1-high --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P2-medium ===" && gh issue list --state open --label P2-medium --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== P3-low ===" && gh issue list --state open --label P3-low --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== Unlabeled ===" && gh issue list --state open --json number,title,labels --template '{{range .}}{{if eq (len .labels) 0}}  #{{.number}} {{.title}}{{"
+"}}{{end}}{{end}}'
    ```
 
 // turbo
