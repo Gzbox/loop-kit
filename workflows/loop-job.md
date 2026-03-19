@@ -1,17 +1,17 @@
 ---
-description: Structured issue processing loop — review PRs, process all actionable issues, submit PRs
+description: Structured issue processing loop — group related issues, implement, submit review-friendly PRs
 ---
 
 # Loop Job Workflow
 
-Structured issue processing loop for any GitHub project. Processes **all actionable issues** per invocation — one PR per issue.
+Structured issue processing loop for any GitHub project. Processes **all actionable issues** per invocation — grouped by component, one PR per issue, optimized for human review.
 
-> Adapt this workflow to your project. Not every project uses TDD or has the same tooling — follow what your `AGENTS.md` defines.
+> Adapt this workflow to your project. Follow what your `AGENTS.md` defines.
 
 ## Prerequisites
 
 - `gh` CLI authenticated with repo access (run `gh auth status` to verify)
-- Project root should have an `AGENTS.md` with build/test commands (recommended but not blocking)
+- `AGENTS.md` exists (run `/loop-init` to generate it)
 - Priority labels are helpful (`P0-critical` through `P3-low`) — but unlabeled issues are still processed
 
 ## Pre-flight Check
@@ -32,27 +32,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 ---
 
-## Step 1: Check Open PRs
-
-// turbo
-1. Check open PRs:
-   ```bash
-   gh pr list --state open --json number,title,labels,reviewDecision
-   ```
-
-2. For each PR:
-   - Check CI status: `gh pr checks <N>`
-   - If CI fails: view logs, diagnose, fix, and push
-   - If merge conflicts: rebase onto main
-
-3. **Report PR status to user** — do NOT merge. Merging is the human's responsibility.
-   - Example: "PR #15: CI ✅, no conflicts, ready for review. PR #18: CI fixed, waiting for re-run."
-
-4. Proceed to Step 2 regardless of PR status. Issues with open PRs will be skipped in Step 2.
-
----
-
-## Step 2: Select Next Issue
+## Step 1: Check PRs & Verify Main
 
 // turbo
 1. Sync to latest main:
@@ -60,34 +40,75 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
    git checkout main && git pull
    ```
 
+2. **Verify main health** — run the project's test suite (from `AGENTS.md`):
+   - If tests fail → **prioritize fixing main** over new issues.
+   - Create a fix branch, fix, submit PR, then report.
+
 // turbo
-2. List open issues:
+3. Check open PRs:
    ```bash
-   gh issue list --state open --json number,title,labels,body
+   gh pr list --state open --json number,title,labels,reviewDecision,headRefName
+   ```
+
+4. **Address review feedback** — for each PR with review comments:
+   ```bash
+   gh pr view <N> --comments --json comments,reviews
+   ```
+   - **"Fix this line"** → check out the branch, make the fix, push
+   - **"Wrong approach, use X"** → refactor, push
+   - **"Don't need this"** → close the PR with comment
+   - **No review yet** → skip, report "awaiting review"
+   - **Stale PR** (open > 3 days, no review) → rebase onto main
+
+   Process review feedback by priority: P0 PRs first.
+
+5. **Pending PR check** — count open PRs awaiting review:
+   - If **≥ 10 pending PRs** → do NOT create new PRs. Report:
+     "You have N PRs awaiting review. Please review them before running /loop again."
+   - Proceed to Step 5 (Record History) and stop.
+
+6. **Report PR status** — do NOT merge. Merging is the human's responsibility.
+
+---
+
+## Step 2: Scan & Auto-Group
+
+// turbo
+1. List open issues:
+   ```bash
+   gh issue list --state open --json number,title,labels,body --limit 50
    ```
 
 // turbo
-3. Check for existing PRs to avoid duplicates:
+2. Check for existing PRs to avoid duplicates:
    ```bash
    gh pr list --state open --json number,title,headRefName
    ```
 
-4. Apply selection rules:
-   - **Exclude** issues that already have an open PR (match by `issue-<N>` in branch name or PR title)
-   - **Sort by priority**: `P0-critical` > `P1-high` > `P2-medium` > `P3-low`
-   - **Unlabeled issues**: read the body, assess priority, then slot them in
-   - **Within same priority**: prefer smaller, more concrete issues first
-   - **Check dependencies**: if the issue body or comments mention dependencies on other issues, verify those are closed first. Skip if prerequisites are open.
+3. **Filter actionable issues**:
+   - Exclude issues with open PRs (match by `issue-<N>` in branch name or PR title)
+   - Exclude `skip-human-decision` labeled issues
+   - Exclude issues with unmet dependencies
+   - Read the full body of each issue
 
-5. **Read the full issue body** before deciding approach — issue bodies often contain detailed acceptance criteria in "Suggested improvements" sections.
+4. **Auto-group** (skip if ≤ 2 actionable issues):
+   - If issues have `component:xxx` labels → group by label
+   - Otherwise → read titles and bodies, identify related issues (same module, same feature area, same page)
+   - Unrelated issues → `standalone` group
+   - **Max 5 issues per group** — split into sub-groups if larger (e.g., `auth-1`, `auth-2`)
 
-6. If no actionable issues remain, report to user and stop.
+5. **Order groups by priority** (highest-priority issue in each group determines group priority):
+   - `P0-critical` > `P1-high` > `P2-medium` > `P3-low`
+   - Within each group, order issues by priority
+   - Unlabeled issues: read body, assess priority
+
+6. If no actionable issues remain, report to user and proceed to Step 5.
 
 ---
 
 ## Step 3: Classify & Implement
 
-Read the selected issue body carefully, then classify using this decision flow:
+Read the selected issue body carefully, then classify:
 
 ### Classification Decision Flow
 
@@ -100,25 +121,22 @@ Issue selected
   ├─ Already has an open PR?
   │  └─ YES → SKIP. Handled in Step 1.
   │
-  ├─ Requires a specific platform? (check AGENTS.md "Platform constraints"
-  │  and issue labels like "depends-macos", "depends-linux", etc.)
-  │  └─ Current env doesn't match → SKIP with comment:
-  │     "Skipped: requires <platform> but running on <current>."
+  ├─ Requires a specific platform? (check AGENTS.md and labels like "depends-macos")
+  │  └─ Current env doesn't match → SKIP with comment.
   │     Do NOT claim validation that cannot happen on this platform.
   │
-  ├─ Labeled "plan-needed" OR issue body says "architecture" / "design decision"?
-  │  ├─ Does docs/plans/<topic>.md already exist?
+  ├─ Labeled "plan-needed" OR involves architecture/design?
+  │  ├─ docs/plans/<topic>.md exists?
   │  │  ├─ YES → PLAN MODE Round 2+ (implement next sub-task)
   │  │  └─ NO  → PLAN MODE Round 1 (produce design doc only)
-  │  └─ Are multiple issues strongly related (shared infrastructure)?
-  │     └─ YES → Group them. Plan covers all, implement one per round.
+  │  └─ Multiple issues in same group share infrastructure?
+  │     └─ YES → Group plan covers all, implement one per round.
   │
-  ├─ Has clear acceptance criteria or concrete scope?
+  ├─ Clear acceptance criteria?
   │  └─ YES → DIRECT IMPLEMENTATION
   │
   └─ No clear scope?
-     └─ Read body carefully. Issues often contain detailed suggestions
-        that serve as implicit AC. Then choose Direct or Plan.
+     └─ Read body carefully, then choose Direct or Plan.
 ```
 
 ### Direct Implementation
@@ -130,19 +148,13 @@ Issue selected
    ```
 
 2. **If the project uses TDD** (check `AGENTS.md`):
-   - Write a failing test capturing expected behavior
-   - Confirm it fails for the right reason
-   - Implement the minimal solution to pass
+   - Write a failing test → confirm it fails for the right reason → implement → pass
 
-3. **If no test infrastructure exists**:
-   - Implement the change directly
-   - Add manual verification steps in the PR description
-   - Consider whether this is an opportunity to add basic tests
+3. **If no test infrastructure**: implement directly, add verification steps in PR.
 
-4. Run the project's verification commands (from `AGENTS.md`):
-   - If no commands defined: at minimum ensure the project builds without errors
+4. Run the project's verification commands (from `AGENTS.md`).
 
-5. Proceed to Step 4
+5. Proceed to Step 4.
 
 ### Plan Mode — Round 1 (Design Only)
 
@@ -151,107 +163,130 @@ Issue selected
    ```bash
    git checkout -b plan-<N>-<topic>
    ```
-
-2. Read all related issues, existing code, and any prior plans in `docs/plans/`
-
-3. Produce a design document at `docs/plans/<topic>.md`:
-   - Problem statement and context
-   - Concrete file changes with type signatures / API shapes
-   - Data flow and state ownership
-   - Sub-task breakdown with estimated complexity
-   - Dependencies between sub-tasks
-
-4. Commit the plan — **do NOT write implementation code in this round**
-
-5. Proceed to Step 4
+2. Produce `docs/plans/<topic>.md` — problem, changes, sub-tasks, dependencies.
+3. Commit plan only — no implementation code.
+4. Proceed to Step 4.
 
 ### Plan Mode — Round 2+ (Implement Sub-task)
 
-1. Read the existing plan from `docs/plans/<topic>.md`
-2. Find the next uncompleted sub-task
-3. Implement it following the "Direct Implementation" flow above
-4. Update the plan to mark the sub-task as done
-5. Proceed to Step 4
+1. Read existing plan, find next uncompleted sub-task.
+2. Implement following Direct Implementation flow.
+3. Update plan to mark sub-task done.
+4. Proceed to Step 4.
 
 ---
 
 ## Step 4: Verify & Submit
 
-1. **Run verification** (defined in `AGENTS.md`):
-   - Typical: build, test, lint, type-check
-   - If `AGENTS.md` doesn't define commands: do your best (at minimum: build)
-   - If full validation isn't possible on current platform: state clearly in PR
+1. **Run verification** (from `AGENTS.md`): build, test, lint, type-check.
 
-2. Commit changes with a descriptive message referencing the issue number
+2. Commit with descriptive message referencing issue number.
 
 // turbo
-3. Push the branch:
+3. Push:
    ```bash
    git push -u origin HEAD
    ```
 
-4. Create a PR (agent constructs title and body based on the changes):
-   ```bash
-   gh pr create --title "<descriptive title>" --body "Closes #<N>
+4. **Create a review-friendly PR**:
 
-   ## Changes
-   - <summary of what changed and why>
+   ```bash
+   gh pr create --title "<descriptive title>" --body "<see PR body template below>"
+   ```
+
+   **PR body template** — optimize for human review:
+
+   ```markdown
+   ## Closes #<N>
+
+   **Group: <component>** (<position>/<total> — see also PR #X, #Y)
+   **Merge after**: PR #X (or "— first in group")
+
+   ## Why
+   <Explain motivation — WHY this change is needed, not what changed>
+
+   ## What Changed
+   - `file.ts` — <what and why>
+
+   ## Key Review Points
+   > Focus your review on these lines:
+   > - `file.ts:45-52` — <core logic change>
+   > - `other.ts:30` — <type change>
 
    ## Verification
-   - <what was tested / validated>
-   - <any caveats or pending validation>"
+   - ✅ <test command> (<N> passing)
+   - ✅ <build command>
+
+   ## After This Group Is Merged
+   <Only on the LAST PR in a group>
+   Test: <what to verify after merging all group PRs>
    ```
-   If `gh pr create` fails (e.g., template parsing error, permissions), try with `--fill` flag as fallback.
-   If it still fails, report the error to the user and stop.
 
-5. **Report**: summarize what was done for this issue.
+   If no group (standalone issue), omit Group/Merge after lines.
+   If `gh pr create` fails, try `--fill` as fallback.
 
-6. **Loop check** — are there more actionable issues?
-   - **YES** → Return to Step 2 (`git checkout main && git pull`, pick next issue)
-   - **NO** → Proceed to Step 5 (Record History)
-   - **Blocked** (remaining issues all need human decision, have open PRs, or are platform-mismatched) → Proceed to Step 5
+5. **Add labels to PR**:
+   ```bash
+   gh label create "component:<name>" --color "1d76db" --force 2>/dev/null
+   gh pr edit <N> --add-label "component:<name>"
+   ```
+
+6. **Loop check** — are there more actionable issues (within session cap of ~10 PRs)?
+   - **YES** → `git checkout main && git pull`, return to Step 2 (pick next issue, same group first)
+   - **NO** → Proceed to Step 5
+   - **Session cap reached** → Proceed to Step 5, note remaining issues
 
 ---
 
 ## Step 5: Record Session History
 
-After processing all issues (or stopping), append a summary to `.agents/loop-history.md`:
+After processing all issues (or stopping), append to `.agents/loop-history.md`:
 
 ```markdown
-## YYYY-MM-DD HH:MM
+## YYYY-MM-DD HH:MM — Session Summary
 
-**PRs processed**: #5 merged, #8 had CI failure (fixed and merged)
-**Issues worked**:
-  - #7 (P1-high) — implemented trigger index → PR #12
-  - #11 (P2-medium) — fixed typo in docs → PR #13
-  - #14 (P2-medium) — added input validation → PR #14
-**Skipped**: #9 (depends on #7, still open), #18 (needs human decision)
-**Notes**: macOS validation pending for #7
+### 📋 Your Review Queue
+
+#### Group: <component> (<N> PRs, <priority>)
+Issues: #X, #Y, #Z
+PRs: #A, #B, #C
+Merge order: #A → #B → #C
+After merge, test: <what to verify>
+
+#### Standalone (<N> PRs)
+PR: #D (<title>)
+
+### ⏭️ Skipped
+- #X (depends on #Y)
+- #Z (needs human decision)
+
+### 📊 Stats
+PRs created: N | Review feedback addressed: N | Remaining issues: N
 ```
 
-This gives the next `/loop` invocation context about what happened previously.
-If the file doesn't exist yet, create it with a header: `# Loop History`
+If the file doesn't exist, create it with header: `# Loop History`
 
 ---
 
 ## Quality Rules (always apply)
 
 - Follow `AGENTS.md` constraints strictly — it is the project's constitution
-- Run full verification suite before committing (or document why you couldn't)
-- Update relevant docs if architecture, workflow, or validation expectations change
-- **One PR per issue** — keep PRs small and focused, but process multiple issues per session
+- Run full verification suite before committing
+- **One PR per issue** — keep PRs small and focused
+- **Key Review Points in every PR** — tell the human where to focus
 - Do not invent priority order — follow labels and `AGENTS.md`
 - Do not claim validation that did not actually happen
 - When issue body conflicts with labels, trust the issue body
 
 ## Flexibility Notes
 
-This workflow adapts to any project:
-- **No labels?** Read issue bodies and use your judgment for priority
-- **No tests?** Skip TDD steps, implement directly, note in PR
-- **No `AGENTS.md`?** Use common sense: build the project, check for obvious errors
+- **No labels?** Read issue bodies and use your judgment
+- **No tests?** Skip TDD, implement directly, note in PR
+- **No `AGENTS.md`?** Run `/loop-init` first; or use common sense
 - **Plan exists from prior round?** Go straight to Round 2+
-- **Issue is trivial (typo, one-line fix)?** Skip classification, just fix and PR
-- **Blocked on another issue?** Skip, pick the next one, report the dependency
-- **First time running?** No history file is fine — it will be created automatically
-- **Platform mismatch?** Skip issues labeled `depends-<platform>` if current env doesn't match. Never claim validation that didn't happen.
+- **Trivial issue (typo, one-line fix)?** Skip classification, just fix and PR
+- **Blocked on another issue?** Skip, pick next, report dependency
+- **First time running?** No history file is fine — created automatically
+- **Platform mismatch?** Skip `depends-<platform>` issues. Never claim false validation.
+- **Only 1-2 issues?** Skip grouping, process directly by priority
+- **Same-group PRs touch same file?** Note in PR: `⚠️ May conflict with PR #X — merge #X first`

@@ -1,10 +1,10 @@
 ---
-description: Process a specific issue by number — same discipline as /loop but skips auto-selection
+description: Process a specific issue by number — same discipline as /loop but for one specified issue
 ---
 
 # Loop Issue Workflow
 
-Process a **specific** GitHub issue by number. Follows the same 5-step discipline as `/loop`, but skips auto-selection (Step 2) and goes directly to the specified issue.
+Process a **specific** GitHub issue by number. Follows the same discipline as `/loop`, but targets one issue directly.
 
 ## Usage
 
@@ -19,9 +19,10 @@ Same as `/loop` — see [loop-job.md](loop-job.md) Pre-flight Check.
 
 ---
 
-## Step 1: Process Open PRs
+## Step 1: Check PRs & Verify Main
 
-Same as `/loop` — see [loop-job.md](loop-job.md) Step 1. Clear all open PRs before starting new work.
+Same as `/loop` — see [loop-job.md](loop-job.md) Step 1.
+Address review feedback, verify main health. Do NOT merge PRs.
 
 ---
 
@@ -44,13 +45,20 @@ Same as `/loop` — see [loop-job.md](loop-job.md) Step 1. Clear all open PRs be
    - **Already has an open PR?** → Report and stop
    - **Blocked on another issue?** → Report the dependency and stop
 
+4. **Identify related issues** for context:
+   ```bash
+   gh issue list --state open --json number,title,labels,body --limit 20
+   ```
+   Scan other open issues — note any that are related (same component, same feature area).
+   This context helps you write better code and a more helpful PR.
+
 ---
 
 ## Step 3: Classify & Implement
 
 Same decision flow as `/loop` — see [loop-job.md](loop-job.md) Step 3.
 
-> **Note**: If the specified issue is labeled `skip-human-decision` or requires a platform that doesn't match, explain clearly to the user (they explicitly asked for this issue).
+> **Note**: If the issue is labeled `skip-human-decision` or requires a different platform, explain clearly to the user (they explicitly asked for this issue).
 
 ---
 
@@ -58,18 +66,27 @@ Same decision flow as `/loop` — see [loop-job.md](loop-job.md) Step 3.
 
 Same as `/loop` — see [loop-job.md](loop-job.md) Step 4.
 
+**Additional for /loop-issue**: include related issue hints in PR body:
+```markdown
+> 💡 Related issues in same area: #X, #Y — consider reviewing together
+```
+
+Do NOT loop back for more issues — `/loop-issue` processes exactly one issue.
+
 ---
 
 ## Step 5: Record History
 
-Same as `/loop` — see [loop-job.md](loop-job.md) Step 5.
-Note: record that this issue was **manually selected** (not auto-picked by priority).
+Same format as `/loop` — see [loop-job.md](loop-job.md) Step 5.
+Note that this issue was **manually selected**:
 
 ```markdown
-## YYYY-MM-DD HH:MM
+## YYYY-MM-DD HH:MM — Session Summary
 
-**PRs processed**: ...
-**Issue worked**: #5 (manually selected) — <description>
-**PR created**: #<M>
-**Notes**: User requested this specific issue via /loop-issue
+### 📋 Your Review Queue
+PR: #<M> (<title>) — manually selected via /loop-issue
+Related: #X, #Y (same component — consider reviewing together)
+
+### 📊 Stats
+PRs created: 1 | Manually selected: #<N>
 ```

@@ -134,52 +134,32 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 LOOP_KIT_VERSION=v1.0.0 bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
 ```
 
-### Installer Options Summary / 安装器选项汇总
+### Installer Options / 安装器选项
 
 | Flag | Effect | 说明 |
 |:-----|:-------|:-----|
-| *(none)* | Interactive prompts | 交互式引导 |
-| `--all` | Install everything without prompting | 无提示安装全部 |
-| `--workflows-only` | Install only workflow files | 仅安装工作流文件 |
-| `--no-labels` | Skip GitHub label creation | 跳过 GitHub 标签创建 |
-| `--no-templates` | Skip Issue/PR templates | 跳过 Issue/PR 模板 |
-| `--no-agents-md` | Skip AGENTS.md template | 跳过 AGENTS.md 模板 |
+| *(none)* | Install everything | 安装全部 |
 | `--version <tag>` | Install a specific version | 安装指定版本 |
 | `--help` | Show usage help | 显示帮助信息 |
 
 ---
 
-## 3. Post-Install Setup / 安装后配置
+## 3. First-Time Setup / 首次配置
 
-### Step 1: Edit AGENTS.md / 编辑 AGENTS.md
+### Run /loop-init / 运行 /loop-init
 
-After installation, your project root will contain an `AGENTS.md` file with placeholders. Fill in your project-specific values:
+After installation, type `/loop-init` in your AI agent. The AI will:
 
-安装后，项目根目录会有一个带占位符的 `AGENTS.md` 文件。请填入你的项目信息：
+安装后，在你的 AI 智能体中输入 `/loop-init`。AI 会：
 
-```markdown
-# AGENTS.md
+1. Analyze your project structure, config files, and README / 分析项目结构、配置文件和 README
+2. Auto-generate `AGENTS.md` with build/test commands / 自动生成含构建/测试命令的 `AGENTS.md`
+3. Create priority labels (P0-P3) and component labels / 创建优先级和组件标签
+4. Report results for your review / 报告结果供你审查
 
-Agent guidance for working on **My Awesome Project**.  <!-- 填入项目名 -->
-
-## Project overview
-A web application built with React and Node.js...    <!-- 填入项目描述 -->
-
-## Build and test commands
-Use these commands for verification:
-
- ```bash
- npm run build         <!-- 填入构建命令 -->
- npm test              <!-- 填入测试命令 -->
- npm run lint          <!-- 填入 lint 命令（可选） -->
- ```
-```
-
-> **💡 Tip / 提示**: If your project has no test framework, note it in `AGENTS.md` so the agent won't force TDD.
+> **💡 Tip / 提示**: Review the generated `AGENTS.md` and adjust if needed. The AI does its best but you know your project better.
 >
-> 如果你的项目没有测试框架，在 `AGENTS.md` 中注明，这样智能体不会强制执行 TDD。
-
-> **🌐 中文用户**: A Chinese version of the template is available at `templates/AGENTS.template.zh-CN.md`.
+> 查看生成的 `AGENTS.md` 并按需调整。AI 会尽力而为，但你更了解你的项目。
 
 ### Step 2: Create GitHub Issues / 创建 GitHub Issues
 
