@@ -281,6 +281,7 @@ The agent reads the issue body and decides the approach:
 | Decision / 决策 | When / 条件 | Action / 动作 |
 |:----------------|:-----------|:-------------|
 | **Skip** | Labeled `skip-human-decision` | Report to user, pick another / 报告给用户，选下一个 |
+| **Skip (platform)** | Labeled `depends-<platform>`, current env doesn't match | Skip with comment, never claim false validation / 跳过并注释，绝不声称虚假验证 |
 | **Plan Mode** | Labeled `plan-needed` or involves architecture | Produce `docs/plans/<topic>.md` first / 先出设计文档 |
 | **Direct** | Clear scope and acceptance criteria | Implement immediately / 立即实现 |
 

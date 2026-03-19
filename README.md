@@ -156,6 +156,7 @@ loop-kit/
 | 🏷️ | **Auto-labeling** / 自动标签 | GitHub Action applies labels from Issue form dropdowns / 从 Issue 表单下拉选项自动打标签 |
 | 📝 | **History Tracking** / 历史追踪 | Each iteration logged for cross-round context / 每轮迭代记录上下文，便于后续回溯 |
 | 🛡️ | **Pre-flight Checks** / 预检 | Auth + clean tree verification before start / 启动前验证认证和工作树状态 |
+| 🖥️ | **Platform Aware** / 平台感知 | Skips issues requiring unavailable platforms / 跳过需要不可用平台的 Issue |
 | 🎯 | **Smart Classification** / 智能分类 | Skip / Plan / Direct decision tree / 跳过 / 规划 / 直接实现的决策树 |
 | 📋 | **PR Template** / PR 模板 | Consistent PR structure across iterations / 跨迭代的一致 PR 结构 |
 | 🔧 | **Flexible** / 灵活适配 | Works with any language, any stack / 适用于任何语言、任何技术栈 |
@@ -175,6 +176,7 @@ Loop Kit 会智能适配你的项目配置：
 | No `AGENTS.md` / 无 `AGENTS.md` | Uses sensible defaults / 使用合理的默认值 |
 | Trivial fix / 简单修复 | Skips classification, just fixes and PRs / 跳过分类，直接修复并提 PR |
 | Blocked issue / 被阻塞的 Issue | Skips it, picks the next one / 跳过当前，选取下一个 |
+| Platform mismatch / 平台不匹配 | Skips issues requiring unavailable platform / 跳过需要不可用平台的 Issue |
 
 <br/>
 
