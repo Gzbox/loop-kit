@@ -36,11 +36,10 @@ jobs:
           echo "Checking file structure..."
           files=(
             "workflows/loop-job.md"
+            "workflows/loop-issue.md"
             "workflows/loop-status.md"
-            "workflows/loop-multi.md"
+            "workflows/loop-init.md"
             "scripts/setup-labels.sh"
-            "templates/AGENTS.template.md"
-            "templates/AGENTS.template.zh-CN.md"
             "templates/github/ISSUE_TEMPLATE/bug_report.yml"
             "templates/github/ISSUE_TEMPLATE/feature_request.yml"
             "templates/github/ISSUE_TEMPLATE/config.yml"
