@@ -24,6 +24,8 @@ Same as `/loop` — see [loop-job.md](loop-job.md) Pre-flight Check.
 Same as `/loop` — see [loop-job.md](loop-job.md) Step 1.
 Address review feedback, verify main health. Do NOT merge PRs.
 
+> **Exception**: The "≥ 10 pending PRs → stop" rule does NOT apply here. The user explicitly selected this issue — always proceed.
+
 ---
 
 ## Step 2: Load Specified Issue

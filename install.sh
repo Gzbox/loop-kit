@@ -44,7 +44,7 @@ download() {
   local dest="$2"
   mkdir -p "$(dirname "$dest")"
   if command -v curl &>/dev/null; then
-    curl -sL "$url" -o "$dest"
+    curl -sfL "$url" -o "$dest"
   elif command -v wget &>/dev/null; then
     wget -q "$url" -O "$dest"
   else
