@@ -213,12 +213,16 @@ if $INSTALL_AGENTS_MD; then
   fi
 fi
 
-# 4. Labels (delegate to setup-labels.sh)
+# 4. Labels (delegate to setup-labels.sh — non-fatal if it fails)
 if $INSTALL_LABELS; then
   echo "🏷️  Creating GitHub labels..."
   LABEL_SCRIPT=$(mktemp)
   download "$REPO_RAW/scripts/setup-labels.sh" "$LABEL_SCRIPT"
-  bash "$LABEL_SCRIPT" --quiet
+  if bash "$LABEL_SCRIPT" --quiet; then
+    :
+  else
+    echo "   ⚠️  Label creation failed (no remote or auth issue). You can run setup-labels.sh later."
+  fi
   rm -f "$LABEL_SCRIPT"
 fi
 
