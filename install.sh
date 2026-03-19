@@ -100,7 +100,7 @@ if $INTERACTIVE; then
   echo ""
 
   # Workflows are always installed (core purpose of Loop Kit)
-  echo "   Workflows (/loop, /loop-issue, /loop-status, /loop-multi) — always installed ✓"
+  echo "   Workflows (/loop, /loop-issue, /loop-status) — always installed ✓"
   echo ""
 
   # Templates
