@@ -173,7 +173,7 @@ Present a summary of what was configured:
 
 🏷️ Labels created:
    - Priority: P0-critical, P1-high, P2-medium, P3-low
-   - Classification: plan-needed, skip-human-decision
+   - Classification: plan-needed, skip-human-decision, has-dependencies
    - Components: component:auth, component:dashboard, ...
    - Platform: depends-macos, ... (if detected)
 

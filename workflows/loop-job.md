@@ -138,6 +138,9 @@ Issue selected
   ├─ Labeled "skip-human-decision"?
   │  └─ YES → SKIP. Report to user with context.
   │
+  ├─ Labeled "has-dependencies"? (defense-in-depth — also filtered in Step 2)
+  │  └─ Any dependency still open? → SKIP. Report: "Blocked by #N (still open)".
+  │
   ├─ Already has an open PR?
   │  └─ YES → SKIP. Handled in Step 1.
   │
