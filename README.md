@@ -79,47 +79,50 @@ Labels and AGENTS.md are created by `/loop-init`, not the installer.
 
 ## 🔄 The Loop / 处理闭环
 
-```
-┌───────────────────────────────────────────────────────────────┐
-│                          /loop                                │
-├───────────────────────────────────────────────────────────────┤
-│                                                               │
-│  Pre-flight (6 steps)                                         │
-│    detect branch → gh auth → clean tree → version             │
-│    → read history → AGENTS.md freshness                       │
-│                    │                                          │
-│  Step 1: Check PRs + Verify Main                              │
-│    ├─ Code PRs → fix CI / address review                      │
-│    ├─ Plan PRs → revise (CHANGES_REQUESTED)                   │
-│    │              or report (APPROVED / no review)             │
-│    └─ Clean merged branches                                   │
-│                    │                                          │
-│  Step 2: Scan & Auto-Group                                    │
-│    filter → group by component → order by priority            │
-│              ┌─────┼─────┐                                    │
-│            Group A  Group B  Standalone                        │
-│              │     │     │                                     │
-│        ┌─────▼───┐ │     │                                    │
-│        │ Step 3  │◄┘     │                                    │
-│        │ Classify│◄──────┘                                    │
-│        └───┬────┘                                             │
-│            ├─ Skip (blocked/human/platform)                    │
-│            ├─ Plan Round 1 → design doc + Plan PR             │
-│            ├─ Plan Round 2+ → implement sub-task              │
-│            └─ Direct → test-first implement                   │
-│                    │                                          │
-│        ┌─────────▼─────────┐                                  │
-│        │ Step 4: Verify    │                                  │
-│        │ & Submit PR       │                                  │
-│        └─────────┬─────────┘                                  │
-│                    │                                          │
-│         More issues? ─YES→ next group (finalize prev group)   │
-│                    │                                          │
-│             NO / cap reached                                  │
-│                    ▼                                           │
-│        Step 5: Record Session History                          │
-│                                                               │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    PF["🚀 Pre-flight (6 steps)<br/>detect branch → gh auth → clean tree<br/>→ version → read history → AGENTS.md check"]
+    S1["🔍 Step 1: Check PRs + Verify Main"]
+    S1C["Code PRs → fix CI / address review"]
+    S1P["Plan PRs → revise or report status"]
+    S1X["Clean merged branches"]
+    S2["📋 Step 2: Scan & Auto-Group<br/>filter → group by component → order by priority"]
+    S3{"🧠 Step 3: Classify"}
+    SKIP["⏭️ Skip<br/>blocked / human / platform"]
+    PR1["📝 Plan Round 1<br/>design doc + Plan PR"]
+    PR2["🔨 Plan Round 2+<br/>implement sub-task"]
+    DIR["✅ Direct<br/>test-first implement"]
+    S4["📦 Step 4: Verify & Submit PR<br/>build/test/lint → PR (3 templates) → group finalize"]
+    MORE{"More issues?"}
+    S5["📊 Step 5: Record Session History<br/>human review queue + merge order"]
+
+    PF --> S1
+    S1 --> S1C & S1P & S1X
+    S1C & S1P & S1X --> S2
+    S2 --> S3
+    S3 -->|"skip-human-decision<br/>has-dependencies<br/>platform mismatch"| SKIP
+    S3 -->|"plan-needed<br/>no plan exists"| PR1
+    S3 -->|"plan-needed<br/>plan exists + unchecked tasks"| PR2
+    S3 -->|"clear criteria"| DIR
+    PR1 & PR2 & DIR --> S4
+    S4 --> MORE
+    MORE -->|"YES (below cap)"| S2
+    MORE -->|"NO / cap reached"| S5
+
+    style PF fill:#1a1a2e,color:#e0e0ff,stroke:#7c3aed
+    style S1 fill:#16213e,color:#e0e0ff,stroke:#3b82f6
+    style S2 fill:#16213e,color:#e0e0ff,stroke:#3b82f6
+    style S3 fill:#1e3a5f,color:#fff,stroke:#f59e0b
+    style SKIP fill:#374151,color:#9ca3af,stroke:#6b7280
+    style PR1 fill:#312e81,color:#c4b5fd,stroke:#8b5cf6
+    style PR2 fill:#312e81,color:#c4b5fd,stroke:#8b5cf6
+    style DIR fill:#064e3b,color:#6ee7b7,stroke:#10b981
+    style S4 fill:#16213e,color:#e0e0ff,stroke:#3b82f6
+    style MORE fill:#1e3a5f,color:#fff,stroke:#f59e0b
+    style S5 fill:#1a1a2e,color:#e0e0ff,stroke:#7c3aed
+    style S1C fill:#1e293b,color:#94a3b8,stroke:#475569
+    style S1P fill:#1e293b,color:#94a3b8,stroke:#475569
+    style S1X fill:#1e293b,color:#94a3b8,stroke:#475569
 ```
 
 | Phase | EN | 中文 |
