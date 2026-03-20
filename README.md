@@ -77,59 +77,59 @@ Labels and AGENTS.md are created by `/loop-init`, not the installer.
 
 <br/>
 
-## \ud83d\udd04 The Loop / \u5904\u7406\u95ed\u73af
+## 🔄 The Loop / 处理闭环
 
 ```
-\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510
-\u2502                          /loop                            \u2502
-\u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524
-\u2502                                                               \u2502
-\u2502  Pre-flight (6 steps)                                         \u2502
-\u2502    detect branch \u2192 gh auth \u2192 clean tree \u2192 version             \u2502
-\u2502    \u2192 read history \u2192 AGENTS.md freshness                       \u2502
-\u2502                    \u2502                                            \u2502
-\u2502  Step 1: Check PRs + Verify Main                              \u2502
-\u2502    \u251c\u2500 Code PRs \u2192 fix CI / address review                     \u2502
-\u2502    \u251c\u2500 Plan PRs \u2192 revise (CHANGES_REQUESTED)                  \u2502
-\u2502    \u2502              or report (APPROVED / no review)             \u2502
-\u2502    \u2514\u2500 Clean merged branches                                   \u2502
-\u2502                    \u2502                                            \u2502
-\u2502  Step 2: Scan & Auto-Group                                    \u2502
-\u2502    filter \u2192 group by component \u2192 order by priority            \u2502
-\u2502              \u250c\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2510                                  \u2502
-\u2502            Group A  Group B  Standalone                        \u2502
-\u2502              \u2502     \u2502     \u2502                                    \u2502
-\u2502        \u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2510 \u2502     \u2502                                    \u2502
-\u2502        \u2502 Step 3  \u2502\u25c4\u2518     \u2502                                    \u2502
-\u2502        \u2502 Classify\u2502\u25c4\u2500\u2500\u2500\u2500\u2500\u2518                                    \u2502
-\u2502        \u2514\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518                                              \u2502
-\u2502            \u251c\u2500 Skip (blocked/human/platform)                   \u2502
-\u2502            \u251c\u2500 Plan Round 1 \u2192 design doc + Plan PR             \u2502
-\u2502            \u251c\u2500 Plan Round 2+ \u2192 implement sub-task              \u2502
-\u2502            \u2514\u2500 Direct \u2192 test-first implement                   \u2502
-\u2502                    \u2502                                            \u2502
-\u2502        \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510                                  \u2502
-\u2502        \u2502 Step 4: Verify   \u2502                                  \u2502
-\u2502        \u2502 & Submit PR      \u2502                                  \u2502
-\u2502        \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518                                  \u2502
-\u2502                    \u2502                                            \u2502
-\u2502         More issues? \u2500YES\u2192 next group (finalize prev group)   \u2502
-\u2502                    \u2502                                            \u2502
-\u2502             NO / cap reached                                   \u2502
-\u2502                    \u25bc                                            \u2502
-\u2502        Step 5: Record Session History                          \u2502
-\u2502                                                               \u2502
-\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518
+┌───────────────────────────────────────────────────────────────┐
+│                          /loop                                │
+├───────────────────────────────────────────────────────────────┤
+│                                                               │
+│  Pre-flight (6 steps)                                         │
+│    detect branch → gh auth → clean tree → version             │
+│    → read history → AGENTS.md freshness                       │
+│                    │                                          │
+│  Step 1: Check PRs + Verify Main                              │
+│    ├─ Code PRs → fix CI / address review                      │
+│    ├─ Plan PRs → revise (CHANGES_REQUESTED)                   │
+│    │              or report (APPROVED / no review)             │
+│    └─ Clean merged branches                                   │
+│                    │                                          │
+│  Step 2: Scan & Auto-Group                                    │
+│    filter → group by component → order by priority            │
+│              ┌─────┼─────┐                                    │
+│            Group A  Group B  Standalone                        │
+│              │     │     │                                     │
+│        ┌─────▼───┐ │     │                                    │
+│        │ Step 3  │◄┘     │                                    │
+│        │ Classify│◄──────┘                                    │
+│        └───┬────┘                                             │
+│            ├─ Skip (blocked/human/platform)                    │
+│            ├─ Plan Round 1 → design doc + Plan PR             │
+│            ├─ Plan Round 2+ → implement sub-task              │
+│            └─ Direct → test-first implement                   │
+│                    │                                          │
+│        ┌─────────▼─────────┐                                  │
+│        │ Step 4: Verify    │                                  │
+│        │ & Submit PR       │                                  │
+│        └─────────┬─────────┘                                  │
+│                    │                                          │
+│         More issues? ─YES→ next group (finalize prev group)   │
+│                    │                                          │
+│             NO / cap reached                                  │
+│                    ▼                                           │
+│        Step 5: Record Session History                          │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-| Phase | EN | \u4e2d\u6587 |
+| Phase | EN | 中文 |
 |:------|:---|:-----|
-| **Pre-flight** | Detect branch, verify `gh` auth, clean tree, read history, check AGENTS.md age | \u68c0\u6d4b\u5206\u652f\u3001\u9a8c\u8bc1\u8ba4\u8bc1\u3001\u5e72\u51c0\u5de5\u4f5c\u6811\u3001\u8bfb\u53d6\u5386\u53f2\u3001\u68c0\u67e5 AGENTS.md \u65f6\u6548 |
-| **Step 1** | Check PRs (code + plan), verify main health, clean merged branches | \u68c0\u67e5 PR\uff08\u4ee3\u7801 + \u8bbe\u8ba1\uff09\u3001\u9a8c\u8bc1\u4e3b\u5e72\u5065\u5eb7\u3001\u6e05\u7406\u5df2\u5408\u5e76\u5206\u652f |
-| **Step 2** | Scan issues, filter (deps/skip/PR), auto-group, order by priority | \u626b\u63cf Issue\u3001\u8fc7\u6ee4\u3001\u81ea\u52a8\u5206\u7ec4\u3001\u6309\u4f18\u5148\u7ea7\u6392\u5e8f |
-| **Step 3** | Classify: **Skip** \u00b7 **Plan Round 1** (design doc) \u00b7 **Plan Round 2+** (sub-task) \u00b7 **Direct** (test-first) | \u5206\u7c7b\uff1a\u8df3\u8fc7 / \u89c4\u5212\u7b2c1\u8f6e / \u89c4\u5212\u7b2c2+\u8f6e / \u76f4\u63a5\u5b9e\u73b0 |
-| **Step 4** | Verify (build/test/lint), submit PR (3 templates), group finalize, loop back | \u9a8c\u8bc1\u3001\u63d0\u4ea4 PR\uff083\u5957\u6a21\u677f\uff09\u3001\u5206\u7ec4\u6536\u5c3e\u3001\u5faa\u73af |
-| **Step 5** | Record session history + human review queue | \u8bb0\u5f55\u4f1a\u8bdd\u5386\u53f2 + \u4eba\u7684\u5ba1\u67e5\u961f\u5217 |
+| **Pre-flight** | Detect branch, verify `gh` auth, clean tree, read history, check AGENTS.md age | 检测分支、验证认证、干净工作树、读取历史、检查 AGENTS.md 时效 |
+| **Step 1** | Check PRs (code + plan), verify main health, clean merged branches | 检查 PR（代码 + 设计）、验证主干健康、清理已合并分支 |
+| **Step 2** | Scan issues, filter (deps/skip/PR), auto-group, order by priority | 扫描 Issue、过滤、自动分组、按优先级排序 |
+| **Step 3** | Classify: **Skip** · **Plan Round 1** (design doc) · **Plan Round 2+** (sub-task) · **Direct** (test-first) | 分类：跳过 / 规划第1轮 / 规划第2+轮 / 直接实现 |
+| **Step 4** | Verify (build/test/lint), submit PR (3 templates), group finalize, loop back | 验证、提交 PR（3套模板）、分组收尾、循环 |
+| **Step 5** | Record session history + human review queue | 记录会话历史 + 人的审查队列 |
 
 <br/>
 
