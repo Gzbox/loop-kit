@@ -101,6 +101,11 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 
 ---
 
+> [!IMPORTANT]
+> After running the installer, you must **commit and push** to your default branch for issue templates and GitHub Actions to take effect.
+>
+> 运行安装器后，必须 **commit 并 push** 到默认分支，Issue 模板和 GitHub Action 才会生效。
+
 ## 3. First-Time Setup / 首次配置
 
 ### Run /loop-init / 运行 /loop-init
