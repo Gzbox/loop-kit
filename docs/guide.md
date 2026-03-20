@@ -79,9 +79,12 @@ You'll see output like: / 你会看到类似输出：
 🎉 Loop Kit installed!
 
 Next:
-  1. /loop-init  — AI analyzes your project, generates AGENTS.md + labels
-  2. /loop       — start processing issues
+  1. git add . && git commit -m 'chore: add Loop Kit' && git push
+  2. /loop-init  — AI analyzes your project, generates AGENTS.md + labels
+  3. /loop       — start processing issues
 ```
+
+> **Note / 注意**: Existing files will be backed up as `.bak` before overwriting. / 覆写前会将已有文件备份为 `.bak`。
 
 ### Version Pinning / 版本锁定
 
@@ -108,22 +111,36 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 
 ## 3. First-Time Setup / 首次配置
 
-### Run /loop-init / 运行 /loop-init
+### Step 1: Commit and Push Installed Files / 第一步：提交并推送安装文件
 
-After installation, type `/loop-init` in your AI agent. The AI will:
+```bash
+git add .agents/ .github/
+git commit -m "chore: install Loop Kit"
+git push
+```
 
-安装后，在你的 AI 智能体中输入 `/loop-init`。AI 会：
+> **Important / 重要**: You must commit and push **before** running `/loop-init`. The working tree must be clean.
+>
+> 必须先提交并推送，**然后再**运行 `/loop-init`。工作树必须是干净的。
 
-1. Analyze your project structure, config files, and README / 分析项目结构、配置文件和 README
-2. Auto-generate `AGENTS.md` with build/test commands / 自动生成含构建/测试命令的 `AGENTS.md`
-3. Create labels (priority, classification, component, platform) / 创建标签（优先级、分类、组件、平台）
-4. Report results for your review / 报告结果供你审查
+### Step 2: Run /loop-init / 第二步：运行 /loop-init
+
+Type `/loop-init` in your AI agent. The AI will:
+
+在你的 AI 智能体中输入 `/loop-init`。AI 会：
+
+1. Detect your default branch name / 检测默认分支名
+2. Analyze your project structure, config files, and README / 分析项目结构、配置文件和 README
+3. Auto-generate `AGENTS.md` with build/test commands / 自动生成含构建/测试命令的 `AGENTS.md`
+4. Create `docs/plans/` directory for Plan Mode / 为规划模式创建 `docs/plans/` 目录
+5. Create labels (priority, classification, component, platform) / 创建标签
+6. Report results for your review / 报告结果供你审查
 
 > **💡 Tip / 提示**: Review the generated `AGENTS.md` and adjust if needed. The AI does its best but you know your project better.
 >
 > 查看生成的 `AGENTS.md` 并按需调整。AI 会尽力而为，但你更了解你的项目。
 
-### Create GitHub Issues / 创建 GitHub Issues
+### Step 3: Create GitHub Issues / 第三步：创建 GitHub Issues
 
 Go to your repo's Issues tab. You'll see:
 
@@ -132,41 +149,13 @@ Go to your repo's Issues tab. You'll see:
 - **Bug Report** — for reporting bugs (auto-labeled `bug`)
 - **Feature Request** — for suggesting features (auto-labeled `enhancement`)
 
-Create a few issues to give `/loop` something to work on:
+Create a few issues to give `/loop` something to work on.
 
-创建几个 Issue 以便 `/loop` 有任务可以处理：
+创建几个 Issue 以便 `/loop` 有任务可以处理。
 
-**Example Bug Report: / 示例 Bug Report：**
-```
-Title: App crashes when clicking submit button
-Priority: P1-high — core functionality broken
-Description:
-  What happened: The app crashes with a TypeError
-  Expected behavior: Form should submit successfully
-  Steps to reproduce: 1. Open form  2. Click submit
-Done When: No crash on submit, form data saved correctly
-```
-
-**Example Feature Request: / 示例 Feature Request：**
-```
-Title: Add dark mode support
-Priority: P2-medium — quality of life improvement
-Implementation Approach: Plan needed — requires design/architecture discussion first
-Description:
-  What: Dark mode theme toggle
-  Why: Users have requested it for late-night usage
-Done When: User can toggle between light and dark themes
-```
-
-### Commit Installed Files / 提交安装文件
-
-```bash
-git add .agents/ .github/
-git commit -m "chore: install Loop Kit"
-git push
-```
-
-> **Note**: `AGENTS.md` is committed separately by `/loop-init` in the step above.
+> **⚠️ Note / 注意**: "Done When" is now a **required field** in both Bug Report and Feature Request templates. Each item becomes a test case in the test-first flow.
+>
+> "Done When" 现在是 Bug Report 和 Feature Request 模板中的**必填字段**。每条都会成为测试用例。
 
 ---
 
@@ -260,23 +249,46 @@ Agent: "Issue #12 is clear scope → Direct Implementation"
   → Full suite: 14 passed, 0 failed ✅
 ```
 
-**Plan Mode example: / 规划模式示例：**
+**Plan Mode example — complete lifecycle: / 规划模式示例 — 完整生命周期：**
 
 ```
-Agent: "Issue #20 needs architecture → Plan Mode (Round 1)"
-  → git checkout -b plan-20-auth-redesign
-  → Analyzing codebase...
-  → Producing docs/plans/auth-redesign.md:
-      - Problem statement
-      - Proposed changes with file list
-      - Sub-tasks: [1] Refactor AuthContext [2] Add OAuth provider [3] Update tests
-  → Committing plan (no code changes yet)
-  → Creating PR for review
+/loop (Session 1) — Round 1: Create Plan
+  Agent: "Issue #20 needs architecture → Plan Mode (Round 1)"
+    → git checkout -b plan-20-auth-redesign
+    → Producing docs/plans/auth-redesign.md
+    → Creating PR with "Relates to #20" (issue stays OPEN)
+    → PR body includes reviewer instructions
+
+You review the plan PR:
+  → Request Changes: "缺少 OAuth 提供商的考量"
+
+/loop (Session 2) — Revise Plan
+  Agent: "Plan PR has CHANGES_REQUESTED → revising plan"
+    → Updates docs/plans/auth-redesign.md based on feedback
+    → Pushes to same branch, replies to review comments
+
+You re-review:
+  → Approve ✅ → Merge the plan PR
+
+/loop (Session 3) — Round 2+: Implement Sub-tasks
+  Agent: "docs/plans/auth-redesign.md exists + issue #20 open → Round 2+"
+    → Finds first unchecked sub-task: "1. Refactor AuthContext"
+    → git checkout -b issue-20-subtask-1-refactor-auth
+    → Implements, tests, creates PR: "Progress on #20 — Sub-task 1/3"
+
+/loop (Session 4)
+  Agent: → Sub-task 2/3...
+
+/loop (Session 5)
+  Agent: → Sub-task 3/3: "Closes #20 — Final sub-task 3/3"
+  → Issue #20 closed when last PR is merged ✅
 ```
 
-Next `/loop` invocation, the plan's first sub-task will be implemented (Round 2+).
-
-下一次 `/loop` 调用时，计划的第一个子任务将被实现（Round 2+）。
+**Key design / 核心设计**:
+- Plan PR uses `Relates to #N` (not `Closes`) — issue stays open for Round 2+
+- Only the LAST sub-task PR uses `Closes #N`
+- Review feedback is handled via GitHub's formal Review mechanism (Request Changes / Approve)
+- Agent reads review comments and revises the plan accordingly
 
 #### Step 4: Verify & Submit / 验证并提交
 
@@ -355,11 +367,23 @@ To process a **specific** issue instead of letting the agent auto-select:
 | Step 2 (Select) | Auto-select by priority / 按优先级自动选取 | **Skip — go directly to #N** / **跳过 — 直接处理 #N** |
 | Step 3-5 | Same / 相同 | Same / 相同 |
 | History note | Auto-selected | "manually selected" |
+| Plan Mode sub-task | Auto-picks next unchecked / 自动选下一个 | **You choose which sub-task** / **你选择子任务** |
+
+### Plan Mode with /loop-issue / 规划模式与 /loop-issue
+
+When you run `/loop-issue` on an issue that has a Plan Mode plan:
+
+当你对一个有规划模式计划的 Issue 运行 `/loop-issue` 时：
+
+- **No plan exists** → Agent creates the plan (Round 1) / Agent 创建计划
+- **Plan exists with sub-tasks** → Agent shows you the sub-task list and lets you choose which one to implement / Agent 展示子任务列表，让你选择
+- **Plan PR is open** → Agent reports the PR status (unlike `/loop` which silently skips) / Agent 报告 PR 状态
 
 ### When to Use / 何时使用
 
 - You know exactly which issue you want fixed / 你明确知道想修哪个 Issue
 - You want to override the priority order / 你想覆盖优先级顺序
+- You want to implement a specific sub-task from a plan / 你想实现计划中的某个特定子任务
 - The issue is blocked by priority rules but you want it done now / Issue 被优先级规则阻塞但你现在就想做
 
 ### Safety Checks / 安全检查
@@ -367,7 +391,7 @@ To process a **specific** issue instead of letting the agent auto-select:
 The agent still validates before starting: / 智能体在开始前仍会验证：
 
 - Is the issue open? / Issue 是否打开？
-- Does it already have a PR? / 是否已有 PR？
+- Does it already have a PR? (matches both `issue-<N>` and `plan-<N>` branches) / 是否已有 PR？
 - Is it blocked by dependencies? (`has-dependencies` label → check referenced issues) / 是否被依赖阻塞？
 
 If any check fails, the agent reports and stops. / 任何检查失败，智能体会报告并停止。
@@ -479,20 +503,20 @@ When installed, an **auto-label GitHub Action** runs on every new issue:
 New Issue Created
        │
        ▼
-Parse Issue Body
+Parse Issue Form Sections (section-based, not full-body search)
        │
-       ├─ Contains "P0-critical"? → Add label: P0-critical
-       ├─ Contains "P1-high"?     → Add label: P1-high
-       ├─ Contains "P2-medium"?   → Add label: P2-medium
-       ├─ Contains "P3-low"?      → Add label: P3-low
-       ├─ Contains "Plan needed"? → Add label: plan-needed
-       ├─ Contains "Human decision"? → Add label: skip-human-decision
-       └─ "Depends On" has #N refs? → Add label: has-dependencies
+       ├─ ### Priority section value starts with "P0-critical"? → Add label: P0-critical
+       ├─ ### Priority section value starts with "P1-high"?     → Add label: P1-high
+       ├─ ### Priority section value starts with "P2-medium"?   → Add label: P2-medium
+       ├─ ### Priority section value starts with "P3-low"?      → Add label: P3-low
+       ├─ ### Implementation Approach section = "Plan needed"?   → Add label: plan-needed
+       ├─ ### Implementation Approach section = "Human decision"? → Add label: skip-human-decision
+       └─ ### Depends On section has #N refs?                    → Add label: has-dependencies
 ```
 
-**This means**: When users fill in the Issue Form dropdown (e.g., selecting "P1-high" for priority), the corresponding label is applied automatically. No manual labeling needed!
-
-**这意味着**：当用户在 Issue 表单下拉菜单中选择优先级（如选择 "P1-high"）时，对应标签会自动添加。无需手动打标签！
+> **Important / 重要**: Labels are detected from the **section header + value** of each form field, not from free text in the body. This prevents false matches (e.g., writing "this is not P0-critical" won't trigger the P0 label). Classification labels are mutually exclusive — only one of `plan-needed` or `skip-human-decision` is applied.
+>
+> 标签从每个表单字段的**段落标题 + 值**检测，而非从正文中搜索。这防止了误匹配。分类标签互斥 — `plan-needed` 和 `skip-human-decision` 只会打一个。
 
 The Action file is at `.github/workflows/auto-label-issues.yml`.
 
@@ -539,7 +563,7 @@ PR: #15 — fixed database connection crash (P0)
 
 ### Why It Matters / 为什么重要
 
-- The agent reads this file at the start of each `/loop` / 智能体在每次 `/loop` 开始时读取此文件
+- The agent reads this file during the **Pre-flight Check** (Step 5) of each `/loop` run / 智能体在每次 `/loop` 的**预检**（第 5 步）中读取此文件
 - Prevents duplicate work across sessions / 防止跨会话的重复工作
 - Provides context about prior decisions / 提供关于先前决策的上下文
 - Helps track overall velocity / 帮助追踪整体进度
@@ -583,11 +607,37 @@ This means all open issues are either: / 这意味着所有打开的 Issue 要�
 
 **解决方案**：创建新 Issue、关闭阻塞 Issue、或移除 `skip-human-decision` 标签。
 
+### Branch protection blocks history commit / 分支保护阻塞历史提交
+
+This is expected behavior. When the default branch has branch protection rules (e.g., require PR reviews), Loop Kit's Step 5 will automatically create a `chore/loop-history-<date>` branch instead of pushing directly. This is a best-effort operation and won't block the workflow.
+
+这是正常行为。当默认分支有分支保护规则时，Loop Kit 的 Step 5 会自动创建 `chore/loop-history-<date>` 分支。这是尽力而为的操作，不会阻塞工作流。
+
+### Fork workflow / Fork 工作流
+
+If you're working on a fork and want PRs to target the upstream repository:
+
+如果你在 fork 上工作，并希望 PR 指向上游仓库：
+
+```bash
+gh pr create --repo <upstream-owner>/<repo> --title "..." --body-file /tmp/pr-body.md
+```
+
+### Wrong code pushed / 推送了错误的代码
+
+Close the PR and delete the remote branch. The issue stays open for the next `/loop` run.
+
+关闭 PR 并删除远程分支。Issue 保持 open，下次 `/loop` 会重新处理。
+
+```bash
+gh pr close <N> && git push origin --delete <branch-name>
+```
+
 ### "gh pr create fails" / "gh pr create 失败"
 
-The agent will automatically try `gh pr create --fill` as a fallback. If it still fails:
+The agent uses `--body-file` to avoid issues with long PR bodies. If it still fails:
 
-智能体会自动尝试 `gh pr create --fill` 作为降级方案。如果仍然失败：
+智能体使用 `--body-file` 以避免长 PR body 导致的问题。如果仍然失败：
 
 ```bash
 # Check repo permissions / 检查仓库权限
@@ -623,10 +673,11 @@ The file name `loop.md` maps directly to the `/loop` command.
 
 | Practice / 做法 | Why / 原因 |
 |:----------------|:----------|
-| Write clear acceptance criteria in "Done When" / 在 "Done When" 中写清验收标准 | Agent knows exactly when to stop / 智能体知道何时该停止 |
+| Write clear acceptance criteria in "Done When" (必填) | Agent knows exactly when to stop + each item becomes a test case / 每条成为测试用例 |
 | Use priority labels consistently / 一致地使用优先级标签 | Ensures correct processing order / 确保正确的处理顺序 |
-| Break large features into small issues / 大功能拆成小 Issue | One issue = one PR, keeps changes reviewable / 一个 Issue = 一个 PR，保持可审查性 |
+| Break large features into small issues / 大功能拆成小 Issue | One issue = one PR, keeps changes reviewable / 一个 Issue = 一个 PR |
 | Use the "Depends On" field for dependencies / 使用 "Depends On" 字段声明依赖 | Agent reliably skips blocked issues / 智能体可靠地跳过被阻塞的 Issue |
+| Use "Plan needed" for complex features / 复杂功能用"需要规划" | Forces design-first approach with review cycle / 先设计再实现 |
 
 ### AGENTS.md / 智能体契约
 
@@ -634,15 +685,26 @@ The file name `loop.md` maps directly to the `/loop` command.
 |:----------------|:----------|
 | List ALL build/test commands / 列出所有构建测试命令 | Agent can verify its own work / 智能体能验证自己的工作 |
 | Document platform constraints / 记录平台约束 | Prevents impossible validation claims / 防止声称无法进行的验证 |
-| Keep it updated / 保持更新 | Stale docs lead to wrong agent behavior / 过时文档导致智能体行为错误 |
+| Keep it updated (re-run `/loop-init` if >90 days old) | Stale docs lead to wrong agent behavior. Agent will remind you. / 过时文档导致智能体行为错误。智能体会提醒你。 |
+
+### Session Cap Tuning / Session Cap 调优
+
+| Project Size / 项目规模 | Recommended Session Cap / 建议值 |
+|:--------------------------|:---------------------------------|
+| Small (≤5 files per issue) | 5 (default) |
+| Medium (5-15 files) | 3 |
+| Large (>15 files, complex) | 1-2 |
+
+Adjust in `AGENTS.md` Loop Settings. / 在 `AGENTS.md` Loop Settings 中调整。
 
 ### Workflow Cadence / 工作流节奏
 
 | Pattern / 模式 | Recommendation / 建议 |
 |:---------------|:---------------------|
-| Daily check-in / 每日签到 | Run `/loop-status` in the morning to see what's pending / 早上运行 `/loop-status` 查看待办 |
-| Focused session / 专注处理 | Run `/loop` — it processes all actionable issues in one session / 运行 `/loop` —— 一次处理所有可操作的 Issue |
-| Review PRs regularly / 定期审查 PR | The agent creates PRs, you review and merge / 智能体创建 PR，你审查并合并 |
+| Daily check-in / 每日签到 | Run `/loop-status` in the morning / 早上运行 `/loop-status` |
+| Focused session / 专注处理 | Run `/loop` — processes all actionable issues / 处理所有可操作的 Issue |
+| Plan review / 审查设计 | Review Plan PRs using GitHub's **Request Changes** or **Approve** / 使用 GitHub 的审查功能审核计划 |
+| Review + merge / 审查合并 | The agent creates PRs, you review and merge / 智能体创建 PR，你审查并合并 |
 
 ---
 

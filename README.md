@@ -48,6 +48,7 @@ bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh
 ### First-time Setup / 首次配置
 
 ```
+git add . && git commit -m 'chore: add Loop Kit' && git push
 /loop-init          ← AI analyzes your project, generates AGENTS.md + labels
 ```
 
@@ -108,7 +109,7 @@ Labels and AGENTS.md are created by `/loop-init`, not the installer.
 | **Pre-flight** | Verify `gh` auth & clean working tree | 验证 `gh` 认证和干净的工作树 |
 | **Step 1** | Check PRs, fix CI, address review feedback, verify main health | 检查 PR，修 CI，处理 review 反馈，验证主干健康 |
 | **Step 2** | Scan all issues, auto-group by component, order by priority | 扫描所有 Issue，按组件自动分组，按优先级排序 |
-| **Step 3** | Classify: **Skip** · **Plan** · **Direct** | 分类：**跳过** · **规划** · **直接实现** |
+| **Step 3** | Classify: **Skip** · **Plan** (review-revise-approve cycle) · **Direct** | 分类：**跳过** · **规划**（审核-修改-批准循环） · **直接实现** |
 | **Step 4** | Verify, submit review-friendly PR with group info, loop back | 验证，提交含分组信息的 PR，继续下一个 |
 | **Step 5** | Output human review checklist (grouped PRs + merge order + test hints) | 输出人的 review 清单（分组 PR + 合并顺序 + 测试指引） |
 
@@ -155,6 +156,8 @@ loop-kit/
 | 🖥️ | **Platform Aware** / 平台感知 | Skips issues requiring unavailable platforms / 跳过需要不可用平台的 Issue |
 | 🔗 | **Dependency Tracking** / 依赖追踪 | Structured `Depends On` field — auto-skips blocked issues / 结构化依赖声明 — 自动跳过被阻塞的 Issue |
 | 🔧 | **Flexible** / 灵活适配 | Works with any language, any stack / 适用于任何语言、任何技术栈 |
+| 🔄 | **Plan Review Lifecycle** / 方案审核生命周期 | Plan PR review-revise-approve cycle with GitHub native review states / 使用 GitHub 原生审核状态的方案审核循环 |
+| 🔀 | **Dynamic Branch Detection** / 动态分支检测 | Works with any default branch name (main, master, develop...) / 支持任何默认分支名 |
 
 <br/>
 
@@ -172,6 +175,8 @@ Loop Kit 会智能适配你的项目配置：
 | Trivial fix / 简单修复 | Skips classification, just fixes and PRs / 跳过分类，直接修复并提 PR |
 | Blocked issue / 被阻塞的 Issue | Skips it, picks the next one / 跳过当前，选取下一个 |
 | Platform mismatch / 平台不匹配 | Skips issues requiring unavailable platform / 跳过需要不可用平台的 Issue |
+| Branch protection / 分支保护 | Auto-fallback to chore branch for history commits / 自动回退到 chore 分支提交历史记录 |
+| Fork workflow / Fork 工作流 | Use `--repo` flag to target upstream for PRs / 使用 `--repo` 参数将 PR 指向上游 |
 
 <br/>
 

@@ -44,11 +44,21 @@ echo ""
 echo "🔄 Loop Kit Installer / Loop Kit 安装器 (${LOOP_KIT_VERSION})"
 echo ""
 
+# Backup existing files before overwriting / 覆写前备份已有文件
+backup_if_exists() {
+  local dest="$1"
+  if [ -f "$dest" ]; then
+    cp "$dest" "${dest}.bak"
+    echo "   📦 Backed up / 已备份: $dest → ${dest}.bak"
+  fi
+}
+
 # Download function
 download() {
   local url="$1"
   local dest="$2"
   mkdir -p "$(dirname "$dest")"
+  backup_if_exists "$dest"
   if command -v curl &>/dev/null; then
     curl -sfL "$url" -o "$dest"
   elif command -v wget &>/dev/null; then
@@ -90,3 +100,13 @@ echo "Next / 下一步:"
 echo "  1. git add . && git commit -m 'chore: add Loop Kit' && git push"
 echo "  2. /loop-init  — AI analyzes your project, generates AGENTS.md + labels / AI 分析项目，生成 AGENTS.md + 标签"
 echo "  3. /loop       — start processing issues / 开始处理 Issue"
+
+# Version pinning hint / 版本锁定提示
+if [ "$LOOP_KIT_VERSION" = "main" ]; then
+  LATEST=$(gh api repos/Gzbox/loop-kit/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+  if [ -n "$LATEST" ]; then
+    echo ""
+    echo "💡 Tip: pin to latest release for stability / 提示：锁定最新版本以确保稳定"
+    echo "   bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version $LATEST"
+  fi
+fi
