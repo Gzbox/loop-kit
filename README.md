@@ -119,7 +119,7 @@ Labels and AGENTS.md are created by `/loop-init`, not the installer.
 ```
 loop-kit/
 ├── workflows/
-│   ├── loop-job.md                # /loop — batch issue processing with grouping
+│   ├── loop.md                # /loop — batch issue processing with grouping
 │   ├── loop-issue.md              # /loop-issue — process a specific issue
 │   ├── loop-status.md             # /loop-status — grouped dashboard
 │   └── loop-init.md               # /loop-init — auto-generate AGENTS.md + labels

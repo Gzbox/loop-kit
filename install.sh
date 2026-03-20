@@ -61,11 +61,11 @@ download() {
 
 # 1. Workflows / 工作流
 echo "📥 Workflows / 工作流..."
-download "$REPO_RAW/workflows/loop-job.md" ".agents/workflows/loop-job.md"
+download "$REPO_RAW/workflows/loop.md" ".agents/workflows/loop.md"
 download "$REPO_RAW/workflows/loop-issue.md" ".agents/workflows/loop-issue.md"
 download "$REPO_RAW/workflows/loop-status.md" ".agents/workflows/loop-status.md"
 download "$REPO_RAW/workflows/loop-init.md" ".agents/workflows/loop-init.md"
-echo "   ✅ .agents/workflows/ (loop-job, loop-issue, loop-status, loop-init)"
+echo "   ✅ .agents/workflows/ (loop, loop-issue, loop-status, loop-init)"
 
 # 2. Issue/PR templates + auto-label action / Issue/PR 模板 + 自动标签 Action
 echo "📥 Templates / 模板..."

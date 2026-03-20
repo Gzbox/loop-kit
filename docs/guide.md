@@ -71,7 +71,7 @@ You'll see output like: / 你会看到类似输出：
 🔄 Loop Kit Installer (main)
 
 📥 Workflows...
-   ✅ .agents/workflows/ (loop-job, loop-issue, loop-status, loop-init)
+   ✅ .agents/workflows/ (loop, loop-issue, loop-status, loop-init)
 📥 Templates...
    ✅ .github/ (issue templates, PR template, auto-label action)
    ✅ .agents/.loop-kit-version (main)
@@ -461,10 +461,10 @@ The workflow files in `.agents/workflows/` are plain Markdown — you can edit t
 
 | Customization / 自定义项 | File / 文件 | How / 方法 |
 |:------------------------|:-----------|:----------|
-| Change merge strategy | `loop-job.md` Step 1 | Step 1 only checks PRs; merge strategy is your choice when merging |
-| Skip PR processing | `loop-job.md` | Remove Step 1 entirely |
-| Add custom verification | `loop-job.md` Step 4 | Add your own commands after build/test |
-| Change branch naming | `loop-job.md` Step 3 | Modify the `git checkout -b` pattern |
+| Change merge strategy | `loop.md` Step 1 | Step 1 only checks PRs; merge strategy is your choice when merging |
+| Skip PR processing | `loop.md` | Remove Step 1 entirely |
+| Add custom verification | `loop.md` Step 4 | Add your own commands after build/test |
+| Change branch naming | `loop.md` Step 3 | Modify the `git checkout -b` pattern |
 | Add more dashboard sections | `loop-status.md` | Add new `gh` query steps |
 
 ---
@@ -605,15 +605,15 @@ Make sure the workflow file is in the correct location:
 
 ```bash
 # Must exist at one of: / 必须存在于以下位置之一：
-.agents/workflows/loop-job.md
-.agent/workflows/loop-job.md
-_agents/workflows/loop-job.md
-_agent/workflows/loop-job.md
+.agents/workflows/loop.md
+.agent/workflows/loop.md
+_agents/workflows/loop.md
+_agent/workflows/loop.md
 ```
 
-The file name `loop-job.md` maps to the `/loop` command (strips the `-job` suffix).
+The file name `loop.md` maps directly to the `/loop` command.
 
-文件名 `loop-job.md` 映射到 `/loop` 命令（去掉 `-job` 后缀）。
+文件名 `loop.md` 直接映射到 `/loop` 命令。
 
 ---
 

@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "Checking file structure..."
           files=(
-            "workflows/loop-job.md"
+            "workflows/loop.md"
             "workflows/loop-issue.md"
             "workflows/loop-status.md"
             "workflows/loop-init.md"
