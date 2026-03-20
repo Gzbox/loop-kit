@@ -189,10 +189,11 @@ The agent verifies: / 智能体验证以下内容：
 
 1. `gh auth status` — Is GitHub CLI authenticated? / GitHub CLI 是否已认证？
 2. `git status --porcelain` — Is the working tree clean? / 工作树是否干净？
+3. Version check — Is Loop Kit up to date? (informational only) / 版本检查 — Loop Kit 是否为最新？（仅提示）
 
-If either fails, the agent stops and reports to you.
+If auth or working tree check fails, the agent stops and reports to you. The version check only prints a notice if an update is available.
 
-如果任一检查失败，智能体会停止并报告。
+如果认证或工作树检查失败，智能体会停止并报告。版本检查仅在有更新时显示提示。
 
 #### Step 1: Check PRs + Verify Main / 检查 PR + 验证主干
 

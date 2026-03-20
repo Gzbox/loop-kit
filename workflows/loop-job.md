@@ -30,6 +30,20 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
    ```
    If dirty, stash or commit before proceeding. Report to user if unclear what to do.
 
+// turbo
+3. Check for Loop Kit updates (non-blocking):
+   ```bash
+   if [ -f .agents/.loop-kit-version ]; then
+     LOCAL_VER=$(cat .agents/.loop-kit-version)
+     LATEST_VER=$(gh api repos/Gzbox/loop-kit/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+     if [ -n "$LATEST_VER" ] && [ "$LOCAL_VER" != "$LATEST_VER" ]; then
+       echo "💡 Loop Kit update available: $LOCAL_VER → $LATEST_VER"
+       echo "   Run: bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version $LATEST_VER"
+     fi
+   fi
+   ```
+   This is informational only — never block the workflow for version mismatches.
+
 ---
 
 ## Step 1: Check PRs & Verify Main
