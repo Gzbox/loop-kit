@@ -1,8 +1,8 @@
 ---
-description: Quick read-only dashboard — view PRs grouped by component, issue counts, and blocked issues
+description: Quick read-only dashboard — view PRs grouped by component, issue counts, and blocked issues / 快速只读仪表盘 — 查看按组件分组的 PR、Issue 数量和被阻塞的 Issue
 ---
 
-# Loop Status
+# Loop Status / 状态仪表盘
 
 Read-only dashboard for the current project. Shows what's pending, grouped for easy scanning.
 

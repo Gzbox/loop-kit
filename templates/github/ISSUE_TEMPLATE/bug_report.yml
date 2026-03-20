@@ -1,39 +1,39 @@
-name: Bug Report
-description: Report a bug
+name: Bug Report / Bug 报告
+description: Report a bug / 报告一个 Bug
 labels: ["bug"]
 body:
   - type: dropdown
     id: priority
     attributes:
-      label: Priority
-      description: How critical is this bug?
+      label: Priority / 优先级
+      description: How critical is this bug? / 这个 Bug 有多严重？
       options:
-        - P0-critical — blocks all progress
-        - P1-high — core functionality broken
-        - P2-medium — quality issue
-        - P3-low — minor / cosmetic
+        - P0-critical — blocks all progress / 阻塞所有进度
+        - P1-high — core functionality broken / 核心功能不可用
+        - P2-medium — quality issue / 质量问题
+        - P3-low — minor / cosmetic / 小问题 / 外观问题
     validations:
       required: true
 
   - type: textarea
     id: description
     attributes:
-      label: Bug Description
-      description: What happened? What did you expect?
+      label: Bug Description / Bug 描述
+      description: What happened? What did you expect? / 发生了什么？你期望的结果是什么？
       placeholder: |
-        **What happened:**
+        **What happened: / 发生了什么：**
 
-        **Expected behavior:**
+        **Expected behavior: / 期望行为：**
 
-        **Steps to reproduce:**
+        **Steps to reproduce: / 复现步骤：**
     validations:
       required: true
 
   - type: textarea
     id: environment
     attributes:
-      label: Environment
-      description: OS, version, relevant config
+      label: Environment / 环境信息
+      description: OS, version, relevant config / 操作系统、版本、相关配置
       placeholder: "macOS 15.3, Swift 6.0, etc."
     validations:
       required: false
@@ -41,17 +41,17 @@ body:
   - type: textarea
     id: acceptance
     attributes:
-      label: Done When
-      description: How do we know this is fixed?
-      placeholder: "The app no longer crashes when..."
+      label: Done When / 完成条件
+      description: How do we know this is fixed? / 怎样算修复完成？
+      placeholder: "The app no longer crashes when... / 应用不再在...时崩溃"
     validations:
       required: false
 
   - type: input
     id: depends-on
     attributes:
-      label: Depends On
-      description: Issues that must be resolved first (e.g., #10, #12)
+      label: Depends On / 依赖项
+      description: Issues that must be resolved first (e.g., #10, #12) / 必须先解决的 Issue（如 #10, #12）
       placeholder: "#10, #12"
     validations:
       required: false

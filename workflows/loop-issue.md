@@ -1,25 +1,25 @@
 ---
-description: Process a specific issue by number — same discipline as /loop but for one specified issue
+description: Process a specific issue by number — same discipline as /loop but for one specified issue / 按编号处理指定 Issue — 与 /loop 同样的规范，但只处理一个指定 Issue
 ---
 
-# Loop Issue Workflow
+# Loop Issue Workflow / 指定 Issue 处理工作流
 
 Process a **specific** GitHub issue by number. Follows the same discipline as `/loop`, but targets one issue directly.
 
-## Usage
+## Usage / 用法
 
 ```
 /loop-issue #5
 /loop-issue 5
 ```
 
-## Pre-flight Check
+## Pre-flight Check / 预检
 
 Same as `/loop` — see [loop-job.md](loop-job.md) Pre-flight Check.
 
 ---
 
-## Step 1: Check PRs & Verify Main
+## Step 1: Check PRs & Verify Main / 检查 PR 和验证主干
 
 Same as `/loop` — see [loop-job.md](loop-job.md) Step 1.
 Address review feedback, verify main health. Do NOT merge PRs.
@@ -28,7 +28,7 @@ Address review feedback, verify main health. Do NOT merge PRs.
 
 ---
 
-## Step 2: Load Specified Issue
+## Step 2: Load Specified Issue / 加载指定 Issue
 
 // turbo
 1. Sync to latest main:
@@ -58,7 +58,7 @@ Address review feedback, verify main health. Do NOT merge PRs.
 
 ---
 
-## Step 3: Classify & Implement
+## Step 3: Classify & Implement / 分类并实现
 
 Same decision flow as `/loop` — see [loop-job.md](loop-job.md) Step 3.
 
@@ -66,7 +66,7 @@ Same decision flow as `/loop` — see [loop-job.md](loop-job.md) Step 3.
 
 ---
 
-## Step 4: Verify & Submit
+## Step 4: Verify & Submit / 验证并提交
 
 Same as `/loop` — see [loop-job.md](loop-job.md) Step 4.
 
@@ -79,7 +79,7 @@ Do NOT loop back for more issues — `/loop-issue` processes exactly one issue.
 
 ---
 
-## Step 5: Record History
+## Step 5: Record History / 记录历史
 
 Same format as `/loop` — see [loop-job.md](loop-job.md) Step 5.
 Note that this issue was **manually selected**:

@@ -41,16 +41,16 @@ jobs:
               }
             }
 
-            // Classification detection
-            if (/Plan needed/i.test(body)) {
+            // Classification detection (bilingual: EN / 中文)
+            if (/Plan needed|需要规划/i.test(body)) {
               labels.push('plan-needed');
             }
-            if (/Human decision/i.test(body)) {
+            if (/Human decision|人工决策/i.test(body)) {
               labels.push('skip-human-decision');
             }
 
-            // Dependency detection
-            const dependsSection = body.match(/### Depends On\s*\n\s*(.+)/i);
+            // Dependency detection (bilingual headers)
+            const dependsSection = body.match(/### Depends On(?:\s*\/\s*依赖项)?\s*\n\s*(.+)/i);
             if (dependsSection && /#\d+/.test(dependsSection[1])) {
               labels.push('has-dependencies');
             }
@@ -66,4 +66,3 @@ jobs:
             } else {
               console.log('No matching labels found in issue body');
             }
-

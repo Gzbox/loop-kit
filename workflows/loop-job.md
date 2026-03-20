@@ -1,20 +1,20 @@
 ---
-description: Structured issue processing loop — group related issues, implement, submit review-friendly PRs
+description: Structured issue processing loop — group related issues, implement, submit review-friendly PRs / 结构化 Issue 处理闭环 — 分组相关 Issue，实现需求，提交易读 PR
 ---
 
-# Loop Job Workflow
+# Loop Job Workflow / 批量处理工作流
 
 Structured issue processing loop for any GitHub project. Processes **all actionable issues** per invocation — grouped by component, one PR per issue, optimized for human review.
 
 > Adapt this workflow to your project. Follow what your `AGENTS.md` defines.
 
-## Prerequisites
+## Prerequisites / 前置条件
 
 - `gh` CLI authenticated with repo access (run `gh auth status` to verify)
 - `AGENTS.md` exists (run `/loop-init` to generate it)
 - Priority labels are helpful (`P0-critical` through `P3-low`) — but unlabeled issues are still processed
 
-## Pre-flight Check
+## Pre-flight Check / 预检
 
 // turbo
 1. Verify gh authentication:
@@ -46,7 +46,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 ---
 
-## Step 1: Check PRs & Verify Main
+## Step 1: Check PRs & Verify Main / 检查 PR 和验证主干
 
 // turbo
 1. Sync to latest main:
@@ -86,7 +86,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 ---
 
-## Step 2: Scan & Auto-Group
+## Step 2: Scan & Auto-Group / 扫描并自动分组
 
 // turbo
 1. List open issues:
@@ -126,11 +126,11 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 ---
 
-## Step 3: Classify & Implement
+## Step 3: Classify & Implement / 分类并实现
 
 Read the selected issue body carefully, then classify:
 
-### Classification Decision Flow
+### Classification Decision Flow / 分类决策流程
 
 ```
 Issue selected
@@ -162,7 +162,7 @@ Issue selected
      └─ Read body carefully, then choose Direct or Plan.
 ```
 
-### Direct Implementation
+### Direct Implementation / 直接实现
 
 // turbo
 1. Create a feature branch:
@@ -179,7 +179,7 @@ Issue selected
 
 5. Proceed to Step 4.
 
-### Plan Mode — Round 1 (Design Only)
+### Plan Mode — Round 1 (Design Only) / 规划模式 — 第 1 轮（仅设计）
 
 // turbo
 1. Create branch:
@@ -190,7 +190,7 @@ Issue selected
 3. Commit plan only — no implementation code.
 4. Proceed to Step 4.
 
-### Plan Mode — Round 2+ (Implement Sub-task)
+### Plan Mode — Round 2+ (Implement Sub-task) / 规划模式 — 第 2+ 轮（实现子任务）
 
 1. Read existing plan, find next uncompleted sub-task.
 2. Implement following Direct Implementation flow.
@@ -199,7 +199,7 @@ Issue selected
 
 ---
 
-## Step 4: Verify & Submit
+## Step 4: Verify & Submit / 验证并提交
 
 1. **Run verification** (from `AGENTS.md`): build, test, lint, type-check.
 
@@ -231,6 +231,14 @@ Issue selected
    ## What Changed
    - `file.ts` — <what and why>
 
+   ## Acceptance Criteria
+   From issue "Done When":
+   - [x] <criterion 1> — `file.ts:12` <how it was met>
+   - [x] <criterion 2> — `other.ts:45-50` <how it was met>
+   - [ ] ⚠️ <criterion 3> — not verified: <reason>
+
+   > If the issue has no "Done When", infer acceptance criteria from the issue body.
+
    ## Key Review Points
    > Focus your review on these lines:
    > - `file.ts:45-52` — <core logic change>
@@ -239,6 +247,13 @@ Issue selected
    ## Verification
    - ✅ <test command> (<N> passing)
    - ✅ <build command>
+
+   ## What I Did NOT Test
+   - <thing not tested> — <why>
+   - <platform/environment limitation>
+
+   > List anything you could not verify. Be honest — this helps the reviewer
+   > know what to check manually. If everything was tested, write "None".
 
    ## After This Group Is Merged
    <Only on the LAST PR in a group>
@@ -262,7 +277,7 @@ Issue selected
 
 ---
 
-## Step 5: Record Session History
+## Step 5: Record Session History / 记录会话历史
 
 After processing all issues (or stopping), append to `.agents/loop-history.md`:
 
@@ -292,7 +307,7 @@ If the file doesn't exist, create it with header: `# Loop History`
 
 ---
 
-## Quality Rules (always apply)
+## Quality Rules (always apply) / 质量规则（始终适用）
 
 - Follow `AGENTS.md` constraints strictly — it is the project's constitution
 - Run full verification suite before committing
@@ -302,7 +317,7 @@ If the file doesn't exist, create it with header: `# Loop History`
 - Do not claim validation that did not actually happen
 - When issue body conflicts with labels, trust the issue body
 
-## Flexibility Notes
+## Flexibility Notes / 灵活性说明
 
 - **No labels?** Read issue bodies and use your judgment
 - **No tests?** Skip TDD, implement directly, note in PR

@@ -1,14 +1,14 @@
 ---
-description: First-time project setup — AI analyzes your project and generates AGENTS.md + labels
+description: First-time project setup — AI analyzes your project and generates AGENTS.md + labels / 首次项目配置 — AI 分析你的项目并生成 AGENTS.md + 标签
 ---
 
-# Loop Init
+# Loop Init / 初始化配置
 
 One-time setup workflow. The AI analyzes your project and auto-generates everything needed for `/loop` to work.
 
 > Run this once after installing Loop Kit. Re-run anytime to refresh after major project changes.
 
-## What This Does
+## What This Does / 这会做什么
 
 1. Verifies `gh` CLI authentication
 2. Analyzes your project structure, config files, and README
@@ -17,7 +17,7 @@ One-time setup workflow. The AI analyzes your project and auto-generates everyth
 
 ---
 
-## Step 1: Verify Prerequisites
+## Step 1: Verify Prerequisites / 检查前置条件
 
 // turbo
 1. Check gh authentication:
@@ -34,7 +34,7 @@ One-time setup workflow. The AI analyzes your project and auto-generates everyth
 
 ---
 
-## Step 2: Analyze Project
+## Step 2: Analyze Project / 分析项目
 
 1. **Read config files** — look for ANY of these (not limited to this list):
    - `package.json`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle`,
@@ -58,7 +58,7 @@ One-time setup workflow. The AI analyzes your project and auto-generates everyth
 
 ---
 
-## Step 3: Generate AGENTS.md
+## Step 3: Generate AGENTS.md / 生成 AGENTS.md
 
 If `AGENTS.md` already exists, read it first. Preserve any user customizations and enhance with detected information.
 
@@ -121,7 +121,7 @@ git add AGENTS.md && git commit -m "chore: generate AGENTS.md via /loop-init"
 
 ---
 
-## Step 4: Create Labels
+## Step 4: Create Labels / 创建标签
 
 // turbo
 1. Create priority labels:
@@ -158,7 +158,7 @@ git add AGENTS.md && git commit -m "chore: generate AGENTS.md via /loop-init"
 
 ---
 
-## Step 5: Report to User
+## Step 5: Report to User / 向用户报告
 
 Present a summary of what was configured:
 
