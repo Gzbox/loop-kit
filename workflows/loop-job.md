@@ -103,7 +103,12 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 3. **Filter actionable issues**:
    - Exclude issues with open PRs (match by `issue-<N>` in branch name or PR title)
    - Exclude `skip-human-decision` labeled issues
-   - Exclude issues with unmet dependencies
+   - Exclude issues with unmet dependencies:
+     - If issue has `has-dependencies` label → parse body for `### Depends On` section
+     - Extract referenced issue numbers (`#N`)
+     - Check each: `gh issue view <N> --json state --jq '.state'`
+     - If **any** dependency is still `OPEN` → skip, report: "Blocked by #N (still open)"
+     - If **all** dependencies are `CLOSED` → proceed (issue is unblocked)
    - Read the full body of each issue
 
 4. **Auto-group** (skip if ≤ 2 actionable issues):

@@ -49,6 +49,12 @@ jobs:
               labels.push('skip-human-decision');
             }
 
+            // Dependency detection
+            const dependsSection = body.match(/### Depends On\s*\n\s*(.+)/i);
+            if (dependsSection && /#\d+/.test(dependsSection[1])) {
+              labels.push('has-dependencies');
+            }
+
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,

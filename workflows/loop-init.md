@@ -137,6 +137,7 @@ git add AGENTS.md && git commit -m "chore: generate AGENTS.md via /loop-init"
    ```bash
    gh label create "plan-needed"         --color "5319E7" --description "Requires design plan before implementation" --force
    gh label create "skip-human-decision" --color "D4C5F9" --description "Needs human decision — do not auto-implement" --force
+   gh label create "has-dependencies"    --color "E99695" --description "Blocked: depends on other issues being resolved first" --force
    ```
 
 3. Create component labels based on detected components:

@@ -153,6 +153,7 @@ loop-kit/
 | 📊 | **Grouped Dashboard** / 分组仪表盘 | `/loop-status` shows PRs grouped by component / 按组件分组展示 PR |
 | 🧠 | **Smart Classification** / 智能分类 | Skip / Plan / Direct decision tree / 跳过 / 规划 / 直接实现的决策树 |
 | 🖥️ | **Platform Aware** / 平台感知 | Skips issues requiring unavailable platforms / 跳过需要不可用平台的 Issue |
+| 🔗 | **Dependency Tracking** / 依赖追踪 | Structured `Depends On` field — auto-skips blocked issues / 结构化依赖声明 — 自动跳过被阻塞的 Issue |
 | 🔧 | **Flexible** / 灵活适配 | Works with any language, any stack / 适用于任何语言、任何技术栈 |
 
 <br/>

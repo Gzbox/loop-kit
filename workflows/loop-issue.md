@@ -45,7 +45,9 @@ Address review feedback, verify main health. Do NOT merge PRs.
 3. Verify the issue is actionable:
    - **Closed?** → Report to user and stop
    - **Already has an open PR?** → Report and stop
-   - **Blocked on another issue?** → Report the dependency and stop
+   - **Has `has-dependencies` label?** → Parse `### Depends On` section, check each referenced issue:
+     - If any dependency is still open → report which issues are blocking and stop
+     - If all dependencies are closed → proceed (issue is unblocked)
 
 4. **Identify related issues** for context:
    ```bash

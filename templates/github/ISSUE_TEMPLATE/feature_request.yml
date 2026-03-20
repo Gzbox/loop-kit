@@ -49,3 +49,12 @@ body:
       placeholder: "The user can..."
     validations:
       required: false
+
+  - type: input
+    id: depends-on
+    attributes:
+      label: Depends On
+      description: Issues that must be resolved first (e.g., #10, #12)
+      placeholder: "#10, #12"
+    validations:
+      required: false
