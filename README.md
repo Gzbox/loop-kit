@@ -81,33 +81,33 @@ Labels and AGENTS.md are created by `/loop-init`, not the installer.
 
 ```mermaid
 flowchart TD
-    PF["🚀 Pre-flight (6 steps)<br/>detect branch → gh auth → clean tree<br/>→ version → read history → AGENTS.md check"]
-    S1["🔍 Step 1: Check PRs + Verify Main"]
-    S1C["Code PRs → fix CI / address review"]
-    S1P["Plan PRs → revise or report status"]
-    S1X["Clean merged branches"]
-    S2["📋 Step 2: Scan & Auto-Group<br/>filter → group by component → order by priority"]
-    S3{"🧠 Step 3: Classify"}
-    SKIP["⏭️ Skip<br/>blocked / human / platform"]
-    PR1["📝 Plan Round 1<br/>design doc + Plan PR"]
-    PR2["🔨 Plan Round 2+<br/>implement sub-task"]
-    DIR["✅ Direct<br/>test-first implement"]
-    S4["📦 Step 4: Verify & Submit PR<br/>build/test/lint → PR (3 templates) → group finalize"]
-    MORE{"More issues?"}
-    S5["📊 Step 5: Record Session History<br/>human review queue + merge order"]
+    PF["🚀 Pre-flight 预检 (6 steps)<br/>detect branch → gh auth → clean tree<br/>检测分支 → 认证 → 干净工作树<br/>→ version → history → AGENTS.md"]
+    S1["🔍 Step 1: Check PRs + Verify Main<br/>检查 PR + 验证主干"]
+    S1C["Code PRs → fix CI / address review<br/>代码 PR → 修 CI / 处理反馈"]
+    S1P["Plan PRs → revise or report<br/>设计 PR → 修改或报告状态"]
+    S1X["Clean merged branches<br/>清理已合并分支"]
+    S2["📋 Step 2: Scan & Auto-Group<br/>扫描 & 自动分组<br/>filter → group by component → priority"]
+    S3{"🧠 Step 3: Classify<br/>分类决策"}
+    SKIP["⏭️ Skip 跳过<br/>blocked / human / platform"]
+    PR1["📝 Plan Round 1 规划第1轮<br/>design doc + Plan PR<br/>设计文档 + 设计 PR"]
+    PR2["🔨 Plan Round 2+ 规划第2+轮<br/>implement sub-task<br/>实现子任务"]
+    DIR["✅ Direct 直接实现<br/>test-first implement<br/>测试先行"]
+    S4["📦 Step 4: Verify & Submit PR<br/>验证并提交 PR<br/>build/test/lint → 3 templates"]
+    MORE{"More issues?<br/>还有更多?"}
+    S5["📊 Step 5: Record History<br/>记录会话历史<br/>human review queue 人的审查队列"]
 
     PF --> S1
     S1 --> S1C & S1P & S1X
     S1C & S1P & S1X --> S2
     S2 --> S3
     S3 -->|"skip-human-decision<br/>has-dependencies<br/>platform mismatch"| SKIP
-    S3 -->|"plan-needed<br/>no plan exists"| PR1
-    S3 -->|"plan-needed<br/>plan exists + unchecked tasks"| PR2
-    S3 -->|"clear criteria"| DIR
+    S3 -->|"plan-needed<br/>no plan exists<br/>无计划文件"| PR1
+    S3 -->|"plan-needed<br/>plan exists + unchecked<br/>有计划 + 未完成子任务"| PR2
+    S3 -->|"clear criteria<br/>明确标准"| DIR
     PR1 & PR2 & DIR --> S4
     S4 --> MORE
-    MORE -->|"YES (below cap)"| S2
-    MORE -->|"NO / cap reached"| S5
+    MORE -->|"YES / below cap<br/>是 / 未达上限"| S2
+    MORE -->|"NO / cap reached<br/>否 / 已达上限"| S5
 
     style PF fill:#1a1a2e,color:#e0e0ff,stroke:#7c3aed
     style S1 fill:#16213e,color:#e0e0ff,stroke:#3b82f6
