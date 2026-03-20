@@ -46,7 +46,7 @@ Read-only dashboard for the current project. Shows what's pending, grouped for e
 // turbo
 4. Check for blocked issues:
    ```bash
-   echo "=== Needs Human Decision ===" && gh issue list --state open --label skip-human-decision --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== Needs Plan ===" && gh issue list --state open --label plan-needed --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}'
+   echo "=== Needs Human Decision ===" && gh issue list --state open --label skip-human-decision --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== Needs Plan ===" && gh issue list --state open --label plan-needed --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}' && echo "=== Blocked by Dependencies ===" && gh issue list --state open --label has-dependencies --json number,title --template '{{range .}}  #{{.number}} {{.title}}{{"\n"}}{{end}}'
    ```
 
 // turbo

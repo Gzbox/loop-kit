@@ -10,10 +10,10 @@ One-time setup workflow. The AI analyzes your project and auto-generates everyth
 
 ## What This Does
 
-1. Analyzes your project structure, config files, and README
-2. Generates a comprehensive `AGENTS.md` tailored to your project
-3. Creates labels on GitHub (priority, classification, component, platform)
-4. Verifies `gh` CLI authentication
+1. Verifies `gh` CLI authentication
+2. Analyzes your project structure, config files, and README
+3. Generates a comprehensive `AGENTS.md` tailored to your project
+4. Creates labels on GitHub (priority, classification, component, platform)
 
 ---
 
