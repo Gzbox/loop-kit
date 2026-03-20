@@ -88,7 +88,7 @@ Next:
 Pin to a specific release for reproducibility: / 锁定到指定版本以确保可复现：
 
 ```bash
-bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version v2.0.0
+bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh) --version v1.0.0
 ```
 
 ### Installer Options / 安装器选项
@@ -247,10 +247,12 @@ The agent reads the issue body and decides the approach:
 ```
 Agent: "Issue #12 is clear scope → Direct Implementation"
   → git checkout -b issue-12-fix-login-timeout
-  → Writing failing test... ✅ (fails for the right reason)
-  → Implementing fix... ✅
-  → Test passes ✅
-  → npm run build ✅
+  → Reading Done When: 2 testable criteria
+  → Writing tests FIRST... 2 tests written
+  → Running tests → 2 FAIL ✅ (confirms tests target the right thing)
+  → Implementing fix...
+  → Running tests → 2 PASS ✅
+  → Full suite: 14 passed, 0 failed ✅
 ```
 
 **Plan Mode example: / 规划模式示例：**
@@ -276,21 +278,25 @@ Next `/loop` invocation, the plan's first sub-task will be implemented (Round 2+
 ```
 Agent: "Running verification..."
   → npm run build ✅
-  → npm test ✅ (14 passing)
+  → Full test suite: 16 passed ✅
 Agent: "Creating review-friendly PR..."
   → PR #22 created with:
     • Group: auth (1/3 — see also PR #23, #24)
+    • Acceptance Criteria: 2/2 met
+    • Test Evidence: 2 tests, red→green
+    • What I Did NOT Test: mobile viewport
     • Key Review Points: login.ts:45-52
-    • Merge after: — (first in group)
 Agent: "Checking for more issues in group auth..."
   → #3 remaining → looping back to Step 2
 ```
 
 Each PR includes: / 每个 PR 包含：
 - **Group info** — `Group: auth (1/3)` / 分组信息
+- **Acceptance Criteria** — maps issue "Done When" to code changes / 将 "Done When" 映射到代码变更
 - **Key Review Points** — which lines to focus on / 重点看哪几行
+- **Test Evidence** — red→green test output as proof / 测试从 ❌ 到 ✅ 的实际输出
+- **What I Did NOT Test** — honest gaps for reviewer to check / 需要 reviewer 手动验证的盲区
 - **Merge order** — `Merge after: PR #X` / 合并顺序
-- **Testing guidance** — what to test after merging the group / 合并后测什么
 
 #### Step 5: Review Checklist / Review 清单
 

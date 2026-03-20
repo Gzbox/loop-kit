@@ -167,7 +167,7 @@ Loop Kit 会智能适配你的项目配置：
 | Scenario / 场景 | Behavior / 行为 |
 |:----------------|:----------------|
 | No priority labels / 无优先级标签 | Agent reads issue bodies and assesses priority / 智能体读取 Issue 正文自行评估优先级 |
-| No test framework / 无测试框架 | Skips TDD, implements directly / 跳过 TDD，直接实现 |
+| No test framework / 无测试框架 | Implements directly, notes gaps in PR / 直接实现，在 PR 中声明未测试项 |
 | No `AGENTS.md` / 无 `AGENTS.md` | Uses sensible defaults / 使用合理的默认值 |
 | Trivial fix / 简单修复 | Skips classification, just fixes and PRs / 跳过分类，直接修复并提 PR |
 | Blocked issue / 被阻塞的 Issue | Skips it, picks the next one / 跳过当前，选取下一个 |

@@ -3,7 +3,7 @@
 # Usage: bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)
 #
 # Options:
-#   --version <tag>      Install a specific version (e.g., v2.0.0). Default: main
+#   --version <tag>      Install a specific version (e.g., v1.0.0). Default: main
 #   --help               Show this help
 set -euo pipefail
 
@@ -15,8 +15,8 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --version)
       if [[ -z "${2:-}" ]]; then
-        echo "Error: --version requires a tag name (e.g., v2.0.0)"
-        echo "错误：--version 需要一个标签名（如 v2.0.0）"
+        echo "Error: --version requires a tag name (e.g., v1.0.0)"
+        echo "错误：--version 需要一个标签名（如 v1.0.0）"
         exit 1
       fi
       LOOP_KIT_VERSION="$2"
@@ -27,7 +27,7 @@ while [[ $# -gt 0 ]]; do
       echo "Usage / 用法: bash <(curl -sL https://raw.githubusercontent.com/Gzbox/loop-kit/main/install.sh)"
       echo ""
       echo "Options / 选项:"
-      echo "  --version <tag>  Install a specific version / 安装指定版本 (e.g., v2.0.0). Default: main"
+      echo "  --version <tag>  Install a specific version / 安装指定版本 (e.g., v1.0.0). Default: main"
       echo "  --help           Show this help / 显示帮助信息"
       exit 0
       ;;

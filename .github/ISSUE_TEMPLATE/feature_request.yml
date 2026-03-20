@@ -45,8 +45,13 @@ body:
     id: acceptance
     attributes:
       label: Done When / 完成条件
-      description: How do we know this is complete? / 怎样算完成？
-      placeholder: "The user can... / 用户可以..."
+      description: List testable criteria — each item becomes a test case / 列出可测试的条件 — 每条将成为一个测试用例
+      placeholder: |
+        - [ ] Wrong password → shows "Invalid credentials" error
+        - [ ] Empty password → submit button disabled
+        - [ ] Valid login → redirects to dashboard within 200ms
+        - [ ] 错误密码 → 显示"凭据无效"错误
+        - [ ] 空密码 → 提交按钮禁用
     validations:
       required: false
 

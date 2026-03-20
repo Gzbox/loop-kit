@@ -42,8 +42,12 @@ body:
     id: acceptance
     attributes:
       label: Done When / 完成条件
-      description: How do we know this is fixed? / 怎样算修复完成？
-      placeholder: "The app no longer crashes when... / 应用不再在...时崩溃"
+      description: List testable criteria — each item becomes a test case / 列出可测试的条件 — 每条将成为一个测试用例
+      placeholder: |
+        - [ ] Same input that caused crash → no crash
+        - [ ] Edge case: empty input → handled gracefully
+        - [ ] 导致崩溃的相同输入 → 不再崩溃
+        - [ ] 边界情况：空输入 → 优雅处理
     validations:
       required: false
 

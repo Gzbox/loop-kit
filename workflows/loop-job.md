@@ -170,10 +170,24 @@ Issue selected
    git checkout -b issue-<N>-<short-description>
    ```
 
-2. **If the project uses TDD** (check `AGENTS.md`):
-   - Write a failing test → confirm it fails for the right reason → implement → pass
+2. **Determine testability** (see decision table):
 
-3. **If no test infrastructure**: implement directly, add verification steps in PR.
+   | Issue Type | Approach |
+   |:-----------|:---------|
+   | Bug fix / feature with Done When | Test-first ✅ |
+   | Refactoring (no behavior change) | Run existing tests before & after |
+   | UI/visual changes | Note in What I Did NOT Test |
+   | Documentation only | No tests needed |
+   | Trivial fix (typo, one-line) | Existing tests sufficient |
+
+3. **Test-first flow** (when applicable):
+   - Read issue "Done When" checklist — each item becomes a test
+   - **Write tests FIRST** — one test per Done When item
+   - **Run tests → confirm FAIL** (proves they target unimplemented behavior)
+   - If tests PASS before implementation → tests are wrong, rewrite them
+   - **Implement the fix/feature**
+   - **Run tests → confirm PASS**
+   - Run full test suite → no regressions
 
 4. Run the project's verification commands (from `AGENTS.md`).
 
@@ -244,16 +258,28 @@ Issue selected
    > - `file.ts:45-52` — <core logic change>
    > - `other.ts:30` — <type change>
 
-   ## Verification
-   - ✅ <test command> (<N> passing)
-   - ✅ <build command>
+   ## Test Evidence
+   New tests: `auth.test.ts` (2 tests for #<N>)
+
+   Before (tests fail — proving they target the right behavior):
+       FAIL  ✕ wrong password → shows error
+             ✕ empty input → button disabled
+       Tests: 2 failed
+
+   After (tests pass):
+       PASS  ✓ wrong password → shows error (5ms)
+             ✓ empty input → button disabled (3ms)
+       Full suite: 16 passed, 0 failed
+
+   > Show only NEW tests' before/after output, not the full suite log.
+   > If existing tests cover the change: "Covered by N existing tests — all pass"
+   > If no test framework: omit this section, explain in What I Did NOT Test.
 
    ## What I Did NOT Test
    - <thing not tested> — <why>
    - <platform/environment limitation>
 
-   > List anything you could not verify. Be honest — this helps the reviewer
-   > know what to check manually. If everything was tested, write "None".
+   > Never omit this section. If everything was tested, write "None".
 
    ## After This Group Is Merged
    <Only on the LAST PR in a group>
@@ -313,6 +339,9 @@ If the file doesn't exist, create it with header: `# Loop History`
 - Run full verification suite before committing
 - **One PR per issue** — keep PRs small and focused
 - **Key Review Points in every PR** — tell the human where to focus
+- **Acceptance Criteria in every PR** — map each "Done When" item to specific code changes
+- **Test Evidence in every code PR** — show red→green test output as proof
+- **What I Did NOT Test in every PR** — be honest about testing gaps; never omit this section
 - Do not invent priority order — follow labels and `AGENTS.md`
 - Do not claim validation that did not actually happen
 - When issue body conflicts with labels, trust the issue body
@@ -320,7 +349,7 @@ If the file doesn't exist, create it with header: `# Loop History`
 ## Flexibility Notes / 灵活性说明
 
 - **No labels?** Read issue bodies and use your judgment
-- **No tests?** Skip TDD, implement directly, note in PR
+- **No tests?** Implement directly, explain in What I Did NOT Test
 - **No `AGENTS.md`?** Run `/loop-init` first; or use common sense
 - **Plan exists from prior round?** Go straight to Round 2+
 - **Trivial issue (typo, one-line fix)?** Skip classification, just fix and PR
@@ -329,3 +358,5 @@ If the file doesn't exist, create it with header: `# Loop History`
 - **Platform mismatch?** Skip `depends-<platform>` issues. Never claim false validation.
 - **Only 1-2 issues?** Skip grouping, process directly by priority
 - **Same-group PRs touch same file?** Note in PR: `⚠️ May conflict with PR #X — merge #X first`
+- **No "Done When" in issue?** Infer acceptance criteria from the issue body and label them as inferred
+- **Plan Mode Round 1 (design only)?** Omit Acceptance Criteria, Test Evidence, and What I Did NOT Test
