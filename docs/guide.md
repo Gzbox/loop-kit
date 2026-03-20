@@ -111,7 +111,7 @@ After installation, type `/loop-init` in your AI agent. The AI will:
 
 1. Analyze your project structure, config files, and README / 分析项目结构、配置文件和 README
 2. Auto-generate `AGENTS.md` with build/test commands / 自动生成含构建/测试命令的 `AGENTS.md`
-3. Create priority labels (P0-P3) and component labels / 创建优先级和组件标签
+3. Create labels (priority, classification, component, platform) / 创建标签（优先级、分类、组件、平台）
 4. Report results for your review / 报告结果供你审查
 
 > **💡 Tip / 提示**: Review the generated `AGENTS.md` and adjust if needed. The AI does its best but you know your project better.
@@ -281,7 +281,7 @@ Agent: "Creating review-friendly PR..."
     • Key Review Points: login.ts:45-52
     • Merge after: — (first in group)
 Agent: "Checking for more issues in group auth..."
-  → #3 remaining → looping back to Step 3
+  → #3 remaining → looping back to Step 2
 ```
 
 Each PR includes: / 每个 PR 包含：
@@ -412,21 +412,9 @@ Suggested: Review auth group PRs (#22-#24), then run /loop
 
 ### Custom Labels / 自定义标签
 
-Add platform-specific labels using `setup-labels.sh`:
+Labels are created automatically by `/loop-init` based on your project structure — including priority, classification, component, and platform labels (e.g., `depends-macos`). To update labels after project changes, re-run `/loop-init`.
 
-使用 `setup-labels.sh` 添加平台特定标签：
-
-```bash
-# Add platform labels / 添加平台标签
-bash scripts/setup-labels.sh --platform depends-macos --platform depends-linux
-
-# View help / 查看帮助
-bash scripts/setup-labels.sh --help
-```
-
-This creates labels like `depends-macos` with a consistent color scheme.
-
-这会创建如 `depends-macos` 的标签，使用统一的配色方案。
+标签由 `/loop-init` 根据你的项目结构自动创建 —— 包括优先级、分类、组件和平台标签（如 `depends-macos`）。项目变动后如需更新标签，重新运行 `/loop-init` 即可。
 
 ### Custom Issue Templates / 自定义 Issue 模板
 

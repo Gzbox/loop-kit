@@ -52,7 +52,7 @@ Structured issue processing loop for any GitHub project. Processes **all actiona
 
 4. **Address review feedback** — for each PR with review comments:
    ```bash
-   gh pr view <N> --comments --json comments,reviews
+   gh pr view <N> --json comments,reviews
    ```
    - **"Fix this line"** → check out the branch, make the fix, push
    - **"Wrong approach, use X"** → refactor, push

@@ -22,9 +22,6 @@ jobs:
       - name: Lint install.sh
         run: shellcheck install.sh
 
-      - name: Lint setup-labels.sh
-        run: shellcheck scripts/setup-labels.sh
-
   dry-run:
     name: Install Dry Run
     runs-on: ubuntu-latest
@@ -39,7 +36,6 @@ jobs:
             "workflows/loop-issue.md"
             "workflows/loop-status.md"
             "workflows/loop-init.md"
-            "scripts/setup-labels.sh"
             "templates/github/ISSUE_TEMPLATE/bug_report.yml"
             "templates/github/ISSUE_TEMPLATE/feature_request.yml"
             "templates/github/ISSUE_TEMPLATE/config.yml"
@@ -47,7 +43,6 @@ jobs:
             "templates/github/workflows/auto-label-issues.yml"
             "install.sh"
             "docs/guide.md"
-            "CONTRIBUTING.md"
             "README.md"
             "LICENSE"
           )
@@ -66,17 +61,14 @@ jobs:
           fi
           echo "All files present ✅"
 
-      - name: Verify scripts are executable
+      - name: Verify install.sh is executable
         run: |
-          for script in install.sh scripts/setup-labels.sh; do
-            if [ ! -x "$script" ]; then
-              echo "::error::$script is not executable"
-              exit 1
-            fi
-          done
-          echo "All scripts executable ✅"
+          if [ ! -x "install.sh" ]; then
+            echo "::error::install.sh is not executable"
+            exit 1
+          fi
+          echo "install.sh executable ✅"
 
-      - name: Test --help flags
+      - name: Test install.sh --help
         run: |
           bash install.sh --help
-          bash scripts/setup-labels.sh --help

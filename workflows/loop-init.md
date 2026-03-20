@@ -12,7 +12,7 @@ One-time setup workflow. The AI analyzes your project and auto-generates everyth
 
 1. Analyzes your project structure, config files, and README
 2. Generates a comprehensive `AGENTS.md` tailored to your project
-3. Creates priority and component labels on GitHub
+3. Creates labels on GitHub (priority, classification, component, platform)
 4. Verifies `gh` CLI authentication
 
 ---
@@ -145,6 +145,16 @@ git add AGENTS.md && git commit -m "chore: generate AGENTS.md via /loop-init"
    gh label create "component:<name>" --color "1d76db" --description "<component description>" --force
    ```
 
+4. Create platform labels if the project has platform-specific requirements:
+   - Check `AGENTS.md`, README, and config files for platform constraints (e.g., iOS-only, requires macOS, Linux-specific)
+   - If platform requirements detected, create labels:
+     ```bash
+     # For each detected platform requirement:
+     gh label create "depends-<platform>" --color "006B75" --description "Requires <platform> for validation" --force
+     ```
+   - Common examples: `depends-macos`, `depends-linux`, `depends-windows`
+   - If no platform requirements detected, skip this step
+
 ---
 
 ## Step 5: Report to User
@@ -164,6 +174,7 @@ Present a summary of what was configured:
    - Priority: P0-critical, P1-high, P2-medium, P3-low
    - Classification: plan-needed, skip-human-decision
    - Components: component:auth, component:dashboard, ...
+   - Platform: depends-macos, ... (if detected)
 
 Next: Create some Issues, then type /loop to start processing.
 Please review AGENTS.md and adjust if needed.

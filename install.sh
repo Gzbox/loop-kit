@@ -77,6 +77,7 @@ echo "   ✅ .github/ (issue templates, PR template, auto-label action)"
 
 # 3. Version file
 echo "$LOOP_KIT_VERSION" > .agents/.loop-kit-version
+echo "   ✅ .agents/.loop-kit-version ($LOOP_KIT_VERSION)"
 
 echo ""
 echo "🎉 Loop Kit installed!"

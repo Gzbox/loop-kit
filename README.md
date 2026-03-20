@@ -123,8 +123,6 @@ loop-kit/
 │   ├── loop-issue.md              # /loop-issue — process a specific issue
 │   ├── loop-status.md             # /loop-status — grouped dashboard
 │   └── loop-init.md               # /loop-init — auto-generate AGENTS.md + labels
-├── scripts/
-│   └── setup-labels.sh            # Standalone label utility
 ├── templates/
 │   └── github/
 │       ├── ISSUE_TEMPLATE/
@@ -137,7 +135,6 @@ loop-kit/
 ├── docs/
 │   └── guide.md                   # Usage tutorial (EN/中文)
 ├── install.sh                     # One-command installer
-├── CONTRIBUTING.md
 └── README.md
 ```
 
